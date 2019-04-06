@@ -52,8 +52,6 @@ It then streams the video via HTTP (along with its subtitles) and play it with a
 
 Download the latest stable release of the binary at [releases](https://github.com/a1phat0ny/torrodle/releases).
 
-Or download the develop version of the binary at [torrodle/bin directory](https://github.com/a1phat0ny/torrodle/tree/master/bin).
-
 ### Go Get
 
 Make sure you have Go installed on your machine.
