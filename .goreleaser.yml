@@ -40,7 +40,8 @@ archive:
     - goos: windows
       format: zip
   files:
-    - '*'
+    - '*.md'
+    - '*.txt'
 
 checksum:
   # project-v1.0.0_checksums.txt
