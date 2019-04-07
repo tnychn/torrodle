@@ -176,9 +176,9 @@ Returns at most {count} results.
 
 <details>
   <summary>Example</summary>
-  <b>You can pass in a slice of strings which are the names of the providers.</b>
+  <p><b>You can pass in a slice of strings which are the names of the providers.</b></p>
   <pre>sources := torrodle.ListResults([]string{"1337x", "RARBG"}, "the great gatsby", 50, CategoryMovie, SortBySeeders)</pre>
-  <b>You can also directly import <code>torrodle/models</code> package and pass in a slice of the provider interfaces.</b>
+  <p><b>You can also directly import <code>torrodle/models</code> package and pass in a slice of the provider interfaces.</b></p>
   <pre>sources := torrodle.ListResults([]models.ProviderInterface{LeetxProvider, RarbgProvider}, "the great gatsby", 50, CategoryMovie, SortBySeeders)</pre>
 </details>
 
