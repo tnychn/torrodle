@@ -49,6 +49,9 @@ func ListProviderResults(provider models.ProviderInterface, query string, count 
 	var sources []models.Source
 	categories := provider.GetCategories()
 	caturl := GetCategoryURL(category, categories)
+	if caturl == "" {
+		logrus.Warningf("'%v' provider does not support category '%v', getting default category (ALL)...", provider.GetName(), category)
+	}
 	sources, err := provider.Search(query, count, caturl)
 	if err != nil {
 		logrus.Fatalln(err)
