@@ -66,7 +66,6 @@ func (provider *LimeTorrentsProvider) Search(query string, count int, categoryUR
 }
 
 func (provider *LimeTorrentsProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
-	sources := []models.Source{}
 	logrus.Infof("LimeTorrents: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -74,6 +73,7 @@ func (provider *LimeTorrentsProvider) extractResults(surl string, page int, resu
 		wg.Done()
 		return
 	}
+	sources := []models.Source{}
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table2")
 	table.Find(`tr[bgcolor="#F4F4F4"]`).Each(func(_ int, tr *goquery.Selection) {

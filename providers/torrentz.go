@@ -77,6 +77,7 @@ func (provider *TorrentzProvider) extractResults(surl string, page int, results 
 		wg.Done()
 		return
 	}
+	sources := []models.Source{}
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	div := doc.Find("div.results")
 	div.Find("dl").Each(func(i int, s *goquery.Selection) {
@@ -109,8 +110,9 @@ func (provider *TorrentzProvider) extractResults(surl string, page int, results 
 			FileSize: int64(filesize),
 			Magnet:   magnet,
 		}
-		*results = append(*results, source)
+		sources = append(sources, source)
 	})
-	logrus.Debugf("Torrentz2: [%d] Amount of results: %d", page, len(*results))
+	logrus.Debugf("Torrentz2: [%d] Amount of results: %d", page, len(sources))
+	*results = append(*results, sources...)
 	wg.Done()
 }

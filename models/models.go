@@ -26,6 +26,11 @@ func (provider *Provider) String() string {
 	return fmt.Sprintf("<Provider(name=%v, url=%v)>", provider.Name, provider.Site)
 }
 
+// Search queries the provider and returns the results (sources).
+func (provider *Provider) Search(string, int, CategoryURL) ([]Source, error) {
+	return []Source{}, nil
+}
+
 // GetName returns the name of this provider.
 func (provider *Provider) GetName() string {
 	return provider.Name

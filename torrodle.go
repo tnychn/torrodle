@@ -27,6 +27,7 @@ const (
 )
 
 // Expose all the providers
+var ThePirateBayProvider = providers.NewThePirateBayProvider()
 var LimeTorrentsProvider = providers.NewLimeTorrentsProvider()
 var Torrentz2Provider = providers.NewTorrentzProvider()
 var RarbgProvider = providers.NewRarbgProvider()
@@ -34,6 +35,7 @@ var LeetxProvider = providers.NewLeetxProvider()
 var YifyProvider = providers.NewYifyProvider()
 
 var AllProviders = [...]models.ProviderInterface{
+	ThePirateBayProvider,
 	LimeTorrentsProvider,
 	Torrentz2Provider,
 	RarbgProvider,
