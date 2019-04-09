@@ -28,7 +28,6 @@ It then streams the video via HTTP (along with its subtitles) and play it with a
 - [Providers](#available-providers)
   - [1337x](#1337x-)
   - [RARBG](#rarbg-)
-  - [The Pirate Bay](#the-pirate-bay-)
   - [YIFY](#yify-)
   - [Torrentz2](#torrentz2)
   - [LimeTorrents](#limetorrents)
@@ -145,7 +144,6 @@ Type: *`string`*
 
 Type: *`models.ProviderInterface`*
 
-* `ThePirateBayProvider` (`The Pirate Bay`)
 * `LimeTorrentsProvider` (`LimeTorrents`)
 * `Torrentz2Provider` (`Torrentz2`)
 * `RarbgProvider` (`RARBG`)
@@ -235,12 +233,6 @@ type Provider struct {
  
 * **Site:** http://rarbg.to/
  
-* **Categories:** Movie, TV, Porn
-
-### The Pirate Bay *
-
-* **Site:** https://thepiratebay.org
-
 * **Categories:** Movie, TV, Porn
  
 ### YIFY *
