@@ -247,7 +247,7 @@ func getSubtitles(query string) (subtitlePath string) {
 	// yes or no
 	need := false
 	prompt := &survey.Confirm{
-		Message: "Need subtitles ?",
+		Message: "Need subtitles?",
 	}
 	survey.AskOne(prompt, &need, nil)
 	if need == false {
@@ -392,6 +392,19 @@ func init() {
 }
 
 func main() {
+	banner :=
+` 
+     __                            ____   
+    / /_____  ______________  ____/ / /__ 
+   / __/ __ \/ ___/ ___/ __ \/ __  / / _ \
+  / /_/ /_/ / /  / /  / /_/ / /_/ / /  __/
+  \__/\____/_/  /_/   \____/\____/_/\___/
+
+  torrodle v1.0.1 (https://github.com/a1phat0ny/torrodle)
+`
+
+	// Startup
+	fmt.Println(banner)
 	logrus.Debug(configurations)
 	// Prepare options and query for searching torrents
 	category := pickCategory()
