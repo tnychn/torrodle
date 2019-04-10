@@ -239,7 +239,7 @@ type Provider struct {
 
 ### The Pirate Bay *
 
-* **Site:** 
+* **Site:** https://thepiratebay.org/
 
 * **Categories:** Movie, TV, Porn
  
