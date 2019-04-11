@@ -2,13 +2,13 @@ package thepiratebay
 
 import (
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/dustin/go-humanize"
 	"github.com/sirupsen/logrus"
 
 	"github.com/a1phat0ny/torrodle/models"
