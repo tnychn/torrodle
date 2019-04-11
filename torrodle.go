@@ -13,6 +13,7 @@ import (
 	"github.com/a1phat0ny/torrodle/providers/leetx"
 	"github.com/a1phat0ny/torrodle/providers/limetorrents"
 	"github.com/a1phat0ny/torrodle/providers/rarbg"
+	"github.com/a1phat0ny/torrodle/providers/sukebei"
 	"github.com/a1phat0ny/torrodle/providers/thepiratebay"
 	"github.com/a1phat0ny/torrodle/providers/torrentz"
 	"github.com/a1phat0ny/torrodle/providers/yify"
@@ -32,6 +33,7 @@ const (
 )
 
 // Expose all the providers
+var SukebeiProvider = sukebei.New()
 var ThePirateBayProvider = thepiratebay.New()
 var LimeTorrentsProvider = limetorrents.New()
 var Torrentz2Provider = torrentz.New()
@@ -40,6 +42,7 @@ var LeetxProvider = leetx.New()
 var YifyProvider = yify.New()
 
 var AllProviders = [...]models.ProviderInterface{
+	SukebeiProvider,
 	ThePirateBayProvider,
 	LimeTorrentsProvider,
 	Torrentz2Provider,
