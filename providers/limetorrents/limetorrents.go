@@ -1,4 +1,4 @@
-package providers
+package limetorrents
 
 import (
 	"fmt"
@@ -13,17 +13,21 @@ import (
 
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
-	"github.com/a1phat0ny/torrodle/utils"
+)
+
+const (
+	Name = "LimeTorrents"
+	Site = "https://www.limetorrents.info"
 )
 
 type LimeTorrentsProvider struct {
 	models.Provider
 }
 
-func NewLimeTorrentsProvider() models.ProviderInterface {
+func New() models.ProviderInterface {
 	provider := &LimeTorrentsProvider{}
-	provider.Name = "LimeTorrents"
-	provider.Site = "https://www.limetorrents.info"
+	provider.Name = Name
+	provider.Site = Site
 	provider.Categories = models.Categories{
 		All:   "/search/all/%v/seeds/%d",
 		Movie: "/search/movies/%v/seeds/%d",
@@ -34,37 +38,11 @@ func NewLimeTorrentsProvider() models.ProviderInterface {
 }
 
 func (provider *LimeTorrentsProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
-	results := []models.Source{}
-	if count <= 0 {
-		return results, nil
-	}
-
-	query = strings.Replace(query, " ", "-", -1)
-	logrus.Infoln("LimeTorrents: Getting search results in parallel...")
-	pages := utils.ComputePageCount(count, 50)
-	logrus.Debugf("LimeTorrents: pages=%d\n", pages)
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
-
-	// asynchronize
-	wg := sync.WaitGroup{}
-	for page := 1; page <= pages; page++ {
-		surl := fmt.Sprintf(string(categoryURL), query, page)
-		wg.Add(1)
-		go provider.extractResults(provider.Site+surl, page, &results, &wg)
-	}
-	wg.Wait()
-
-	// Ending up
-	logrus.Infof("LimeTorrents: Found %d results\n", len(results))
-	if len(results) < count {
-		count = len(results)
-	}
-	return results[:count], nil
+	results, err := provider.Query(query, categoryURL, count, 50, 1, extractor)
+	return results, err
 }
 
-func (provider *LimeTorrentsProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
+func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
 	logrus.Infof("LimeTorrents: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -107,7 +85,7 @@ func (provider *LimeTorrentsProvider) extractResults(surl string, page int, resu
 		source := models.Source{
 			From:     "LimeTorrents",
 			Title:    title,
-			URL:      provider.Site + URL,
+			URL:      Site + URL,
 			Seeders:  seeders,
 			Leechers: leechers,
 			FileSize: int64(filesize),

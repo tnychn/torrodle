@@ -3,13 +3,19 @@
 - This allows us to access methods and even fields of an interface.*/
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/a1phat0ny/torrodle/utils"
+	"github.com/sirupsen/logrus"
+	"net/url"
+	"sync"
+)
 
-// ProviderInterface is an interface that provides all the methods a `Provider` struct type has.
+// ProviderInterface is an interface that exposes all the methods a `Provider` struct type has.
 type ProviderInterface interface {
 	String() string
 	Search(string, int, CategoryURL) ([]Source, error) // search for torrents with a given (query, count, categoryURL) -> returns a slice of sources found
-	// Getters
+	Query(string, CategoryURL, int, int, int, func(string, int, *[]Source, *sync.WaitGroup)) ([]Source, error)
 	GetName() string
 	GetSite() string
 	GetCategories() Categories
@@ -46,11 +52,42 @@ func (provider *Provider) GetCategories() Categories {
 	return provider.Categories
 }
 
+// Query is a universal base function for querying webpages asynchronusly.
+func (provider *Provider) Query(query string, categoryURL CategoryURL, count int, perPage int, start int, extractor func(string, int, *[]Source, *sync.WaitGroup)) ([]Source, error) {
+	results := []Source{}
+	if count <= 0 {
+		return results, nil
+	}
+
+	query = url.QueryEscape(query)
+	if categoryURL == "" {
+		categoryURL = provider.Categories.All
+	}
+	logrus.Infof("%v: Getting search results in parallel...\n", provider.Name)
+	pages := utils.ComputePageCount(count, perPage)
+	logrus.Debugf("%v: pages=%d\n", provider.Name, pages)
+
+	// asynchronize
+	wg := sync.WaitGroup{}
+	for page := start; page <= pages; page++ {
+		surl := fmt.Sprintf(string(categoryURL), query, page)
+		wg.Add(1)
+		go extractor(provider.Site+surl, page, &results, &wg)
+	}
+	wg.Wait()
+
+	// Ending up
+	logrus.Infof("%v: Found %d results\n", provider.Name, len(results))
+	if len(results) < count {
+		count = len(results)
+	}
+	return results[:count], nil
+}
+
 // Category is a custom type which represents a URL of a Category.
 type CategoryURL string
 
 // Categories is a collection of CategoryURL types.
-// See also: `utils.GetCategoryURL`
 type Categories struct {
 	All   CategoryURL
 	Movie CategoryURL

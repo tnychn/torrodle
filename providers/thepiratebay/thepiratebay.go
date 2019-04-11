@@ -1,9 +1,8 @@
-package providers
+package thepiratebay
 
 import (
 	"fmt"
 	"github.com/dustin/go-humanize"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -14,17 +13,21 @@ import (
 
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
-	"github.com/a1phat0ny/torrodle/utils"
+)
+
+const (
+	Name = "ThePirateBay"
+	Site = "https://thepiratebay.org"
 )
 
 type ThePirateBayProvider struct {
 	models.Provider
 }
 
-func NewThePirateBayProvider() models.ProviderInterface {
+func New() models.ProviderInterface {
 	provider := &ThePirateBayProvider{}
-	provider.Name = "ThePirateBay"
-	provider.Site = "https://thepiratebay.org"
+	provider.Name = Name
+	provider.Site = Site
 	provider.Categories = models.Categories{
 		All:   "/search/%v/%d/99/0",
 		Movie: "/search/%v/%d/99/200",
@@ -35,36 +38,11 @@ func NewThePirateBayProvider() models.ProviderInterface {
 }
 
 func (provider *ThePirateBayProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
-	results := []models.Source{}
-	if count <= 0 {
-		return results, nil
-	}
-
-	query = url.QueryEscape(query)
-	pages := utils.ComputePageCount(count, 30)
-	logrus.Debugf("ThePirateBay: pages=%d\n", pages)
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
-
-	// asynchronize
-	wg := sync.WaitGroup{}
-	for page := 0; page < pages; page++ {
-		surl := fmt.Sprintf(string(categoryURL), query, page)
-		wg.Add(1)
-		go provider.extractResults(provider.Site+surl, page, &results, &wg)
-	}
-	wg.Wait()
-
-	// Ending up
-	logrus.Infof("ThePirateBay: Found %d results\n", len(results))
-	if len(results) < count {
-		count = len(results)
-	}
-	return results[:count], nil
+	results, err := provider.Query(query, categoryURL, count, 30, 0, extractor)
+	return results, err
 }
 
-func (provider *ThePirateBayProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
+func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
 	logrus.Infof("ThePirateBay: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -99,7 +77,7 @@ func (provider *ThePirateBayProvider) extractResults(surl string, page int, resu
 		source := models.Source{
 			From:     "ThePirateBay",
 			Title:    strings.TrimSpace(title),
-			URL:      provider.Site + URL,
+			URL:      Site + URL,
 			Seeders:  seeders,
 			Leechers: leechers,
 			FileSize: int64(filesize),

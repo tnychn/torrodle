@@ -1,4 +1,4 @@
-package providers
+package yify
 
 import (
 	"errors"
@@ -11,6 +11,13 @@ import (
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
 	"github.com/a1phat0ny/torrodle/utils"
+)
+
+const (
+	Name = "YIFY"
+	Site = "https://yts.am"
+
+	apiURL = "https://yts.am/api"
 )
 
 var trackers = [...]string{
@@ -28,18 +35,16 @@ var trackers = [...]string{
 
 type YifyProvider struct {
 	models.Provider
-	apiURL string
 }
 
-func NewYifyProvider() models.ProviderInterface {
+func New() models.ProviderInterface {
 	provider := &YifyProvider{}
-	provider.Name = "YIFY"
-	provider.Site = "https://yts.am"
+	provider.Name = Name
+	provider.Site = Site
 	provider.Categories = models.Categories{
 		All:   "/v2/list_movies.json?query_term=%v&limit=50&page=%d",
 		Movie: "/v2/list_movies.json?query_term=%v&limit=50&page=%d",
 	} // this provider can only search for movies
-	provider.apiURL =  "https://yts.am/api"
 	return provider
 }
 
@@ -63,7 +68,7 @@ func (provider *YifyProvider) Search(query string, count int, categoryURL models
 
 	// Extract sources
 	logrus.Infoln("YIFY: Getting search results...")
-	_, json, err := request.Get(nil, provider.apiURL+surl, nil)
+	_, json, err := request.Get(nil, apiURL+surl, nil)
 	if err != nil {
 		return results, err
 	}

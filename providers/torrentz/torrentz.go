@@ -1,9 +1,7 @@
-package providers
+package torrentz
 
 import (
 	"fmt"
-	"net/url"
-
 	"strconv"
 	"strings"
 	"sync"
@@ -14,17 +12,21 @@ import (
 
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
-	"github.com/a1phat0ny/torrodle/utils"
+)
+
+const (
+	Name = "Torrentz2"
+	Site = "https://torrentz2.eu"
 )
 
 type TorrentzProvider struct {
 	models.Provider
 }
 
-func NewTorrentzProvider() models.ProviderInterface {
+func New() models.ProviderInterface {
 	provider := &TorrentzProvider{}
-	provider.Name = "Torrentz2"
-	provider.Site = "https://torrentz2.eu"
+	provider.Name = Name
+	provider.Site = Site
 	provider.Categories = models.Categories{
 		All:   "/search?f=%v&p=%d",
 		Movie: "/search?f=%v&p=%d",
@@ -36,41 +38,11 @@ func NewTorrentzProvider() models.ProviderInterface {
 }
 
 func (provider *TorrentzProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
-	results := []models.Source{}
-	if count <= 0 {
-		return results, nil
-	}
-
-	query = url.QueryEscape(query)
-	logrus.Infoln("Torrentz2: Getting search results in parallel...")
-	pages := utils.ComputePageCount(count, 50)
-	logrus.Debugf("Torrentz2: pages=%d\n", pages)
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
-
-	// asynchronize
-	wg := sync.WaitGroup{}
-	for page := 0; page <= pages; page++ {
-		surl := fmt.Sprintf(string(categoryURL), query, page)
-		if page == 0 {
-			surl = strings.TrimSuffix(surl, "&p=0")
-		}
-		logrus.Debugf("Torrentz2: surl=%v\n", provider.Site+surl)
-		wg.Add(1)
-		go provider.extractResults(provider.Site+surl, page, &results, &wg)
-	}
-	wg.Wait()
-
-	// Ending up
-	logrus.Infof("Torrentz2: Found %d results\n", len(results))
-	if len(results) < count {
-		count = len(results)
-	}
-	return results[:count], nil
+	results, err := provider.Query(query, categoryURL, count, 50, 0, extractor)
+	return results, err
 }
 
-func (provider *TorrentzProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
+func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
 	logrus.Infof("Torrentz2: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -105,7 +77,7 @@ func (provider *TorrentzProvider) extractResults(surl string, page int, results 
 		source := models.Source{
 			From:     "Torrentz2",
 			Title:    strings.TrimSpace(title),
-			URL:      provider.Site + URL,
+			URL:      Site + URL,
 			Seeders:  seeders,
 			Leechers: leechers,
 			FileSize: int64(filesize),

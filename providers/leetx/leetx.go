@@ -1,8 +1,7 @@
-package providers
+package leetx
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 	"strings"
 	"sync"
@@ -13,17 +12,21 @@ import (
 
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
-	"github.com/a1phat0ny/torrodle/utils"
+)
+
+const (
+	Name = "1337x"
+	Site = "https://1337x.to"
 )
 
 type LeetxProvider struct {
 	models.Provider
 }
 
-func NewLeetxProvider() models.ProviderInterface {
+func New() models.ProviderInterface {
 	provider := &LeetxProvider{}
-	provider.Name = "1337x"
-	provider.Site = "https://1337x.to"
+	provider.Name = Name
+	provider.Site = Site
 	provider.Categories = models.Categories{
 		All:   "/search/%v/%d/",
 		Movie: "/category-search/%v/Movies/%d/",
@@ -35,39 +38,15 @@ func NewLeetxProvider() models.ProviderInterface {
 }
 
 func (provider *LeetxProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
-	results := []models.Source{}
-	if count <= 0 {
-		return results, nil
-	}
-
-	query = url.QueryEscape(query)
-	logrus.Infoln("1337x: Getting search results in parallel...")
 	perPage := 40
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
 	if categoryURL == provider.Categories.All {
 		perPage = 20
 	}
-	pages := utils.ComputePageCount(count, perPage)
-	logrus.Debugf("1337x: pages=%d\n", pages)
-	// asynchronize
-	wg := sync.WaitGroup{}
-	for page := 1; page <= pages; page++ {
-		surl := fmt.Sprintf(string(categoryURL), query, page)
-		wg.Add(1)
-		go provider.extractResults(provider.Site+surl, page, &results, &wg)
-	}
-	wg.Wait()
-	// Ending up
-	logrus.Infof("1337x: Found %d results\n", len(results))
-	if len(results) < count {
-		count = len(results)
-	}
-	return results[:count], nil
+	results, err := provider.Query(query, categoryURL, count, perPage, 0, extractor)
+	return results, err
 }
 
-func (provider *LeetxProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
+func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
 	logrus.Infof("1337x: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -100,7 +79,7 @@ func (provider *LeetxProvider) extractResults(surl string, page int, results *[]
 		source := models.Source{
 			From:     "1337x",
 			Title:    strings.TrimSpace(title),
-			URL:      provider.Site + URL,
+			URL:      Site + URL,
 			Seeders:  seeders,
 			Leechers: leechers,
 			FileSize: int64(filesize),
@@ -113,13 +92,13 @@ func (provider *LeetxProvider) extractResults(surl string, page int, results *[]
 	group := sync.WaitGroup{}
 	for _, source := range sources {
 		group.Add(1)
-		go provider.getSourceWorker(source, results, &group) // directly append the completed sources to `results`
+		go getSourceWorker(source, results, &group) // directly append the completed sources to `results`
 	}
 	group.Wait()
 	wg.Done()
 }
 
-func (provider *LeetxProvider) getSourceWorker(source models.Source, results *[]models.Source, group *sync.WaitGroup) {
+func getSourceWorker(source models.Source, results *[]models.Source, group *sync.WaitGroup) {
 	var magnet string
 	var torrents []string
 

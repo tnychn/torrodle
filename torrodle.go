@@ -10,7 +10,12 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/providers"
+	"github.com/a1phat0ny/torrodle/providers/leetx"
+	"github.com/a1phat0ny/torrodle/providers/limetorrents"
+	"github.com/a1phat0ny/torrodle/providers/rarbg"
+	"github.com/a1phat0ny/torrodle/providers/thepiratebay"
+	"github.com/a1phat0ny/torrodle/providers/torrentz"
+	"github.com/a1phat0ny/torrodle/providers/yify"
 )
 
 const (
@@ -27,12 +32,12 @@ const (
 )
 
 // Expose all the providers
-var ThePirateBayProvider = providers.NewThePirateBayProvider()
-var LimeTorrentsProvider = providers.NewLimeTorrentsProvider()
-var Torrentz2Provider = providers.NewTorrentzProvider()
-var RarbgProvider = providers.NewRarbgProvider()
-var LeetxProvider = providers.NewLeetxProvider()
-var YifyProvider = providers.NewYifyProvider()
+var ThePirateBayProvider = thepiratebay.New()
+var LimeTorrentsProvider = limetorrents.New()
+var Torrentz2Provider = torrentz.New()
+var RarbgProvider = rarbg.New()
+var LeetxProvider = leetx.New()
+var YifyProvider = yify.New()
 
 var AllProviders = [...]models.ProviderInterface{
 	ThePirateBayProvider,
