@@ -29,7 +29,6 @@ func NewLimeTorrentsProvider() models.ProviderInterface {
 		Movie: "/search/movies/%v/seeds/%d",
 		TV:    "/search/tv/%v/seeds/%d",
 		Anime: "/search/anime/%v/seeds/%d",
-		Porn:  "",
 	}
 	return provider
 }
@@ -39,17 +38,16 @@ func (provider *LimeTorrentsProvider) Search(query string, count int, categoryUR
 	if count <= 0 {
 		return results, nil
 	}
+
+	query = strings.Replace(query, " ", "-", -1)
+	logrus.Infoln("LimeTorrents: Getting search results in parallel...")
+	pages := utils.ComputePageCount(count, 50)
+	logrus.Debugf("LimeTorrents: pages=%d\n", pages)
 	if categoryURL == "" {
 		categoryURL = provider.Categories.All
 	}
 
-	logrus.Infoln("LimeTorrents: Getting search results in parallel...")
-	pages := utils.ComputePageCount(count, 50)
-	logrus.Debugf("LimeTorrents: pages=%d\n", pages)
-
-	query = strings.Replace(query, " ", "-", -1)
-
-	// synchronize
+	// asynchronize
 	wg := sync.WaitGroup{}
 	for page := 1; page <= pages; page++ {
 		surl := fmt.Sprintf(string(categoryURL), query, page)
@@ -57,6 +55,7 @@ func (provider *LimeTorrentsProvider) Search(query string, count int, categoryUR
 		go provider.extractResults(provider.Site+surl, page, &results, &wg)
 	}
 	wg.Wait()
+
 	// Ending up
 	logrus.Infof("LimeTorrents: Found %d results\n", len(results))
 	if len(results) < count {
@@ -73,6 +72,7 @@ func (provider *LimeTorrentsProvider) extractResults(surl string, page int, resu
 		wg.Done()
 		return
 	}
+
 	sources := []models.Source{}
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table2")
@@ -115,6 +115,7 @@ func (provider *LimeTorrentsProvider) extractResults(surl string, page int, resu
 		}
 		sources = append(sources, source)
 	})
+
 	logrus.Debugf("LimeTorrents: [%d] Amount of results: %d", page, len(sources))
 	*results = append(*results, sources...)
 	wg.Done()

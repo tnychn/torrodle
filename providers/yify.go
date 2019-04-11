@@ -38,7 +38,7 @@ func NewYifyProvider() models.ProviderInterface {
 	provider.Categories = models.Categories{
 		All:   "/v2/list_movies.json?query_term=%v&limit=50&page=%d",
 		Movie: "/v2/list_movies.json?query_term=%v&limit=50&page=%d",
-	} // this providers can only search for movies
+	} // this provider can only search for movies
 	provider.apiURL =  "https://yts.am/api"
 	return provider
 }
@@ -58,8 +58,7 @@ func (provider *YifyProvider) Search(query string, count int, categoryURL models
 	}
 	query = url.QueryEscape(query)
 	pages := utils.ComputePageCount(count, 50)
-	surl := fmt.Sprintf(string(categoryURL), query, pages) //// sort by number of seeders
-	//// q.Set("sort_by", "seeds")
+	surl := fmt.Sprintf(string(categoryURL), query, pages)
 	logrus.Debugf("YIFY: pages=%d\n", pages)
 
 	// Extract sources

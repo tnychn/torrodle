@@ -39,12 +39,14 @@ func (provider *ThePirateBayProvider) Search(query string, count int, categoryUR
 	if count <= 0 {
 		return results, nil
 	}
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
+
 	query = url.QueryEscape(query)
 	pages := utils.ComputePageCount(count, 30)
 	logrus.Debugf("ThePirateBay: pages=%d\n", pages)
+	if categoryURL == "" {
+		categoryURL = provider.Categories.All
+	}
+
 	// asynchronize
 	wg := sync.WaitGroup{}
 	for page := 0; page < pages; page++ {
@@ -53,6 +55,7 @@ func (provider *ThePirateBayProvider) Search(query string, count int, categoryUR
 		go provider.extractResults(provider.Site+surl, page, &results, &wg)
 	}
 	wg.Wait()
+
 	// Ending up
 	logrus.Infof("ThePirateBay: Found %d results\n", len(results))
 	if len(results) < count {

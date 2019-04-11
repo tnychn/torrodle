@@ -2,8 +2,8 @@ package providers
 
 import (
 	"fmt"
-
 	"net/url"
+
 	"strconv"
 	"strings"
 	"sync"
@@ -37,17 +37,17 @@ func NewTorrentzProvider() models.ProviderInterface {
 
 func (provider *TorrentzProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	results := []models.Source{}
-	query = url.QueryEscape(query)
 	if count <= 0 {
 		return results, nil
 	}
-	if categoryURL == "" {
-		categoryURL = provider.Categories.All
-	}
 
+	query = url.QueryEscape(query)
 	logrus.Infoln("Torrentz2: Getting search results in parallel...")
 	pages := utils.ComputePageCount(count, 50)
 	logrus.Debugf("Torrentz2: pages=%d\n", pages)
+	if categoryURL == "" {
+		categoryURL = provider.Categories.All
+	}
 
 	// asynchronize
 	wg := sync.WaitGroup{}
@@ -61,6 +61,7 @@ func (provider *TorrentzProvider) Search(query string, count int, categoryURL mo
 		go provider.extractResults(provider.Site+surl, page, &results, &wg)
 	}
 	wg.Wait()
+
 	// Ending up
 	logrus.Infof("Torrentz2: Found %d results\n", len(results))
 	if len(results) < count {

@@ -39,9 +39,9 @@ func (provider *LeetxProvider) Search(query string, count int, categoryURL model
 	if count <= 0 {
 		return results, nil
 	}
-	query = url.QueryEscape(query)
 
-	logrus.Infof("1337x: Getting search results in parallel...\n")
+	query = url.QueryEscape(query)
+	logrus.Infoln("1337x: Getting search results in parallel...")
 	perPage := 40
 	if categoryURL == "" {
 		categoryURL = provider.Categories.All
@@ -68,7 +68,6 @@ func (provider *LeetxProvider) Search(query string, count int, categoryURL model
 }
 
 func (provider *LeetxProvider) extractResults(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
-	sources := []models.Source{} // Temporary array for storing models.Source(s) but without magnet and torrent links
 	logrus.Infof("1337x: [%d] Extracting results...\n", page)
 	_, html, err := request.Get(nil, surl, nil)
 	if err != nil {
@@ -76,6 +75,8 @@ func (provider *LeetxProvider) extractResults(surl string, page int, results *[]
 		wg.Done()
 		return
 	}
+
+	sources := []models.Source{} // Temporary array for storing models.Source(s) but without magnet and torrent links
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table-list.table.table-responsive.table-striped")
 	table.Find("tr").Each(func(i int, tr *goquery.Selection) {
@@ -106,6 +107,7 @@ func (provider *LeetxProvider) extractResults(surl string, page int, results *[]
 		}
 		sources = append(sources, source)
 	})
+
 	logrus.Debugf("1337x: [%d] Amount of results: %d", page, len(sources))
 	logrus.Debugf("1337x: [%d] Getting sources in parallel...", page)
 	group := sync.WaitGroup{}
