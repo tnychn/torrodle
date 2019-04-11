@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/a1phat0ny/torrodle/config"
-	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"os/user"
@@ -11,15 +9,18 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"unicode/utf8"
 
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/oz/osdb"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/AlecAivazis/survey.v1"
 
 	"github.com/a1phat0ny/torrodle"
 	"github.com/a1phat0ny/torrodle/client"
+	"github.com/a1phat0ny/torrodle/config"
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/player"
 )
@@ -125,9 +126,16 @@ func chooseResults(results []models.Source) string {
 		tablewriter.Colors{tablewriter.FgHiCyanColor},
 	)
 	for i, result := range results {
-		title := result.Title
-		if len(title) > 45 {
-			title = title[:42] + "..."
+		title := strings.TrimSpace(result.Title)
+		isEng := utf8.RuneCountInString(title) == len(title)
+		if isEng {
+			if len(title) > 45 {
+				title = title[:42] + "..."
+			}
+		} else {
+			if utf8.RuneCountInString(title) > 25 {
+				title = string([]rune(title)[:22]) + "..."
+			}
 		}
 		table.Append([]string{strconv.Itoa(i + 1), title, strconv.Itoa(result.Seeders), strconv.Itoa(result.Leechers), humanize.Bytes(uint64(result.FileSize))})
 	}
@@ -393,7 +401,7 @@ func init() {
 
 func main() {
 	banner :=
-` 
+		` 
      __                            ____   
     / /_____  ______________  ____/ / /__ 
    / __/ __ \/ ___/ ___/ __ \/ __  / / _ \
