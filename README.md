@@ -164,7 +164,7 @@ It sorts the results and returns at most {count} results.
 
 <details>
   <summary>Example</summary>
-  <pre>sources := torrodle.ListProviderResults(LeetxProvider, "the great gatsby", 50, CategoryMovie, SortBySeeders)</pre>
+  <pre>sources := torrodle.ListProviderResults(torrodle.LeetxProvider, "the great gatsby", 50, torrodle.CategoryMovie, torrodle.SortBySeeders)</pre>
 </details>
 
 <br>
@@ -179,9 +179,9 @@ Returns at most {count} results.
 <details>
   <summary>Example</summary>
   <p><b>You can pass in a slice of strings which are the names of the providers.</b></p>
-  <pre>sources := torrodle.ListResults([]string{"1337x", "RARBG"}, "the great gatsby", 50, CategoryMovie, SortBySeeders)</pre>
+  <pre>sources := torrodle.ListResults([]string{"1337x", "RARBG"}, "the great gatsby", 50, torrodle.CategoryMovie, torrodle.SortBySeeders)</pre>
   <p><b>You can also directly import <code>torrodle/models</code> package and pass in a slice of the provider interfaces.</b></p>
-  <pre>sources := torrodle.ListResults([]models.ProviderInterface{LeetxProvider, RarbgProvider}, "the great gatsby", 50, CategoryMovie, SortBySeeders)</pre>
+  <pre>sources := torrodle.ListResults([]models.ProviderInterface{torrodle.LeetxProvider, torrodle.RarbgProvider}, "the great gatsby", 50, torrodle.CategoryMovie, torrodle.SortBySeeders)</pre>
 </details>
 
 ### Models
@@ -227,11 +227,15 @@ type Provider struct {
 
 ### 1337x *
 
+**`torrodle/providers/leetx`**
+
 * **Site:** https://1337x.to/
 
 * **Categories:** Movie, TV, Anime, Porn (All)
  
 ### RARBG *
+
+**`torrodle/providers/rarbg`**
  
 * **Site:** http://rarbg.to/
  
@@ -239,23 +243,31 @@ type Provider struct {
 
 ### The Pirate Bay *
 
+**`torrodle/providers/thepiratebay`**
+
 * **Site:** https://thepiratebay.org/
 
 * **Categories:** Movie, TV, Porn
  
 ### YIFY *
+
+**`torrodle/providers/yify`**
  
 * **Site:** https://yts.am/
  
 * **Categories:** Movie
  
 ### Torrentz2
+
+**`torrodle/providers/torrentz`**
  
 * **Site:** https://torrentz2.eu/
  
 * **Categories:** Movie, TV, Anime, Porn (All)
  
 ### LimeTorrents
+
+**`torrodle/providers/limetorrents`**
  
 * **Site:** https://www.limetorrents.info/
  
