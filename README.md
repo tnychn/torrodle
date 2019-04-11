@@ -145,6 +145,7 @@ Type: *`string`*
 
 Type: *`models.ProviderInterface`*
 
+* `SukebeiProvider` (`Sukebei`)
 * `ThePirateBayProvider` (`The Pirate Bay`)
 * `LimeTorrentsProvider` (`LimeTorrents`)
 * `Torrentz2Provider` (`Torrentz2`)
@@ -272,6 +273,14 @@ type Provider struct {
 * **Site:** https://www.limetorrents.info/
  
 * **Categories:** Movie, TV, Anime
+
+### Sukebei
+
+**`torrodle/providers/sukebei`**
+
+* **Site:** https://sukebei.nyaa.si/
+ 
+* **Categories:** Porn (Japanese AV)
  
  (`*` recommended provider)
  
