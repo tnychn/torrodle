@@ -408,7 +408,7 @@ func main() {
   / /_/ /_/ / /  / /  / /_/ / /_/ / /  __/
   \__/\____/_/  /_/   \____/\____/_/\___/
 
-  torrodle v1.0.1 (https://github.com/a1phat0ny/torrodle)
+  torrodle v1.0.2 (https://github.com/a1phat0ny/torrodle)
 `
 
 	// Startup
