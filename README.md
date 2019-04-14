@@ -81,9 +81,8 @@ Dependencies are listed in [`go.mod`](./go.mod) file.
 
 1. [logrus](https://github.com/sirupsen/logrus) -- better logging
 2. [goquery](https://github.com/PuerkitoBio/goquery) -- HTML parsing
-3. [gjson](https://github.com/tidwall/gjson) -- JSON parsing
-4. [torrent](https://github.com/anacrolix/torrent) -- torrent streaming
-5. [osdb](https://github.com/oz/osdb) -- subtitles fetching from OpenSubtitles
+3. [torrent](https://github.com/anacrolix/torrent) -- torrent streaming
+4. [osdb](https://github.com/oz/osdb) -- subtitles fetching from OpenSubtitles
 5. [go-humanize](https://github.com/dustin/go-humanize) -- humanizing file size words
 6. [color](https://github.com/fatih/color) -- colorized output
 7. [tablewriter](https://github.com/olekukonko/tablewriter) -- table rendering
