@@ -1,16 +1,15 @@
 package yify
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
 
-	"github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
-
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
 	"github.com/a1phat0ny/torrodle/utils"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -48,6 +47,27 @@ func New() models.ProviderInterface {
 	return provider
 }
 
+type apiResponse struct {
+	Status        string `json:"status"`
+	StatusMessage string `json:"status_message"`
+	Data          struct {
+		Movies []struct {
+			URL       string `json:"url"`
+			Title     string `json:"title"`
+			TitleLong string `json:"title_long"`
+			Torrents  []struct {
+				URL       string `json:"url"`
+				Hash      string `json:"hash"`
+				Quality   string `json:"quality"`
+				Type      string `json:"type"`
+				Seeds     int    `json:"seeds"`
+				Peers     int    `json:"peers"`
+				SizeBytes int64  `json:"size_bytes"`
+			} `json:"torrents"`
+		} `json:"movies"`
+	} `json:"data"`
+}
+
 func (provider *YifyProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	// categoryURL will be ignored since this provider only searches for movies
 	results := []models.Source{}
@@ -68,43 +88,44 @@ func (provider *YifyProvider) Search(query string, count int, categoryURL models
 
 	// Extract sources
 	logrus.Infoln("YIFY: Getting search results...")
-	_, json, err := request.Get(nil, apiURL+surl, nil)
+	_, resp, err := request.Get(nil, apiURL+surl, nil)
 	if err != nil {
 		return results, err
 	}
 
-	status := gjson.Get(json, "status").String()
-	msg := gjson.Get(json, "status_message").String()
+	response := apiResponse{}
+	json.Unmarshal([]byte(resp), &response)
+
+	status := response.Status
+	msg := response.StatusMessage
 	logrus.Debugln("YIFY: Message ->", msg)
 	if status != "ok" {
 		return results, errors.New("YIFY: returned a non-ok")
 	}
 
 	logrus.Infoln("YIFY: Extracting sources...")
-	data := gjson.Get(json, "data")
-	movies := data.Get("movies").Array()
+	data := response.Data
+	movies := data.Movies
 	for _, movie := range movies {
-		title := movie.Get("title_long").String()
-		URL := movie.Get("url").String()
 		source := models.Source{
 			From:  provider.Name,
-			Title: title,
-			URL:   URL,
+			Title: movie.TitleLong,
+			URL:   movie.URL,
 		}
-		torrents := movie.Get("torrents").Array()
+		torrents := movie.Torrents
 		for _, torrent := range torrents {
 			s := source
-			s.Title += " " + torrent.Get("quality").String() + " " + torrent.Get("type").String() + " YIFY"
-			s.Seeders = int(torrent.Get("seeds").Int())
-			s.Leechers = int(torrent.Get("peers").Int())
-			s.FileSize = torrent.Get("size_bytes").Int()
+			s.Title += " " + torrent.Quality + " " + torrent.Type + " YIFY"
+			s.Seeders = torrent.Seeds
+			s.Leechers = torrent.Peers
+			s.FileSize = torrent.SizeBytes
 			// filter out invalid sources
 			if s.Seeders == 0 {
 				continue
 			}
 			// build magnet uri
-			hash := torrent.Get("hash").String()
-			encodedName := url.PathEscape(movie.Get("title").String())
+			hash := torrent.Hash
+			encodedName := url.PathEscape(movie.Title)
 			magnet := fmt.Sprintf("magnet:?xt=urn:btih:%v&dn=%v", hash, encodedName)
 			for _, tracker := range trackers {
 				magnet += "&tr=" + tracker

@@ -1,6 +1,7 @@
 package rarbg
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -8,11 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
-
 	"github.com/a1phat0ny/torrodle/models"
 	"github.com/a1phat0ny/torrodle/request"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -48,6 +47,17 @@ func New() models.ProviderInterface {
 	os.Mkdir(dir, os.ModePerm)
 	tokenFile = filepath.Join(dir, "rarbg_token.txt")
 	return provider
+}
+
+type apiResponse struct {
+	TorrentResults []struct {
+		Title    string `json:"title"`
+		Download string `json:"download"`
+		Seeders  int    `json:"seeders"`
+		Leechers int    `json:"leechers"`
+		Size     int64  `json:"size"`
+		InfoPage string `json:"info_page"`
+	} `json:"torrent_results"`
 }
 
 func (provider *RarbgProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
@@ -96,11 +106,11 @@ func (provider *RarbgProvider) Search(query string, count int, categoryURL model
 	logrus.Debugf("RARBG: surl=%v\n", surl)
 
 	logrus.Infoln("RARBG: Getting search results...")
-	_, json, err := request.Get(nil, surl, nil)
+	_, resp, err := request.Get(nil, surl, nil)
 	if err != nil {
 		return results, err
 	}
-	if json == "" {
+	if resp == "" {
 		// empty response -> update token
 		token, err = newToken()
 		if err != nil {
@@ -110,17 +120,19 @@ func (provider *RarbgProvider) Search(query string, count int, categoryURL model
 		return provider.Search(query, count, categoryURL)
 	}
 
+	response := apiResponse{}
+	json.Unmarshal([]byte(resp), &response)
 	logrus.Infoln("RARBG: Extracting sources...")
-	data := gjson.Get(json, "torrent_results").Array()
+	data := response.TorrentResults
 	for _, result := range data {
 		source := models.Source{
 			From:     provider.Name,
-			Title:    result.Get("title").String(),
-			URL:      result.Get("info_page").String(),
-			Seeders:  int(result.Get("seeders").Int()),
-			Leechers: int(result.Get("leechers").Int()),
-			FileSize: result.Get("size").Int(),
-			Magnet:   result.Get("download").String(),
+			Title:    result.Title,
+			URL:      result.InfoPage,
+			Seeders:  result.Seeders,
+			Leechers: result.Leechers,
+			FileSize: result.Size,
+			Magnet:   result.Download,
 		}
 		if source.Title == "" || source.URL == "" || source.Seeders == 0 {
 			continue
@@ -136,11 +148,15 @@ func (provider *RarbgProvider) Search(query string, count int, categoryURL model
 
 func newToken() (string, error) {
 	logrus.Infoln("RARBG: Getting API token...")
-	_, res, err := request.Get(nil, tokenURL, nil)
+	_, resp, err := request.Get(nil, tokenURL, nil)
 	if err != nil {
 		return "", err
 	}
-	token := gjson.Get(string(res), "token").String()
+	response := struct{
+		Token string `json:"token"`
+	}{}
+	json.Unmarshal([]byte(resp), &response)
+	token := response.Token
 	if token == "" {
 		return "", errors.New("RARBG: error getting API token")
 	}
