@@ -316,7 +316,11 @@ func playVideo(player *player.Player, source models.Source, subtitlePath string)
 		errorPrint(err)
 		os.Exit(1)
 	}
-	c.SetSource(source)
+	_, err = c.SetSource(source)
+	if err != nil {
+		errorPrint(err)
+		os.Exit(1)
+	}
 	// start client
 	c.Start()
 	// handle video playing
@@ -377,6 +381,7 @@ func init() {
 	} else if strings.HasPrefix(dataDir, "~/") {
 		dataDir = filepath.Join(home, dataDir[2:]) // expand user home directoy for path in configurations file
 	}
+	configurations.DataDir = dataDir
 	subtitlesDir = filepath.Join(dataDir, "subtitles")
 
 	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
@@ -414,6 +419,31 @@ func main() {
 	// Startup
 	fmt.Println(banner)
 	logrus.Debug(configurations)
+
+	// Stream torrent from magnet provided in command-line
+	if len(os.Args) > 1 {
+		// make source
+		source := models.Source{
+			From: "User Provided",
+			Title: "Unknown",
+			Magnet: os.Args[1],
+		}
+		// player
+		playerChoice := pickPlayer()
+		if playerChoice == "" {
+			errorPrint("Operation aborted")
+			return
+		}
+		var p *player.Player
+		if playerChoice == "None" {
+			p = nil
+		} else {
+			p = player.GetPlayer(playerChoice)
+		}
+		// start
+		playVideo(p, source, "")
+	}
+
 	// Prepare options and query for searching torrents
 	category := pickCategory()
 	if category == "" {
