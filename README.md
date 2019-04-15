@@ -24,6 +24,8 @@ It then streams the video via HTTP (along with its subtitles) and play it with a
   - [Build From Source](#build-from-source)
   - [Dependencies](#dependencies)
 - [Usage](#usage)
+  - [Search for torrents](#search-for-torrents)
+  - [Stream from own magnet](#stream-from-own-magnet)
 - [Configurations](#configurations)
 - [Providers](#available-providers)
   - [1337x](#1337x-)
@@ -90,12 +92,20 @@ Dependencies are listed in [`go.mod`](./go.mod) file.
 
 ## Usage
 
+**Recommended video player:** [MPV](https://mpv.io)
+
+### Search for torrents
+
 Enter `torrodle` in your terminal. That's all !
 
 This command will launch a *wizard* that will help you search for torrents.
 
-For auto executing of video players, only **MPV** and **VLC** are supported (for now).
-For other video players, you can choose `None` in video player options prompt and open your video player with the stream url.
+### Stream from own magnet
+
+Enter `torrodle "magnet uri"` in your terminal. Choose your preferred video player and enjoy !
+
+***NOTE:** For auto executing of video players, only **MPV** and **VLC** are supported.
+For other video players, you can choose `None` in video player options prompt and open your video player with the stream url.*
 
 ## Configurations
 
