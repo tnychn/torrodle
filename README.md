@@ -12,7 +12,7 @@
 **torrodle** is a command-line program which search and gather magnet links of movies, tv shows, animes and porns from [providers](#available-providers).
 It then streams the video via HTTP (along with its subtitles) and play it with a user preferred video player (such as *vlc* and *mpv*).
 
-> If you don't know what BitTorrent is, you shouldn't be using **Torrodle**. There are some copyrighted content which might be illegal downloading them in your country.
+> If you don't know what BitTorrent is, you shouldn't be using **torrodle**. There are some copyrighted content which might be illegal downloading them in your country.
 
 ## Table of Contents
 - [Features](#features)
