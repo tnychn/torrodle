@@ -1,6 +1,6 @@
-<h1 align="center">Torrodle</h1>
+<h1 align="center">torrodle</h1>
 
-<p align="center"><em>Watch anything instantly just with a single command</em></p>
+<p align="center"><em>A powerful torrent scraper & streamer</em></p>
 
 <p align="center"><img src="demo.gif" width=70%></p>
 
@@ -9,7 +9,7 @@
     <a href="https://github.com/a1phat0ny"><img src="https://img.shields.io/badge/dev-a1phat0ny-orange.svg?style=flat-square&logo=github"></a>
 </p>
 
-**Torrodle** is a command-line program which search and gather magnet links of movies, tv shows, animes and porns from [providers](#available-providers).
+**torrodle** is a command-line program which search and gather magnet links of movies, tv shows, animes and porns from [providers](#available-providers).
 It then streams the video via HTTP (along with its subtitles) and play it with a user preferred video player (such as *vlc* and *mpv*).
 
 > If you don't know what BitTorrent is, you shouldn't be using **Torrodle**. There are some copyrighted content which might be illegal downloading them in your country.
