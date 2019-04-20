@@ -405,6 +405,7 @@ func init() {
 }
 
 func main() {
+	name := color.HiYellowString("[torrodle v1.0.3]")
 	banner :=
 `
 	_____                          ______________     
@@ -413,11 +414,16 @@ func main() {
 	/ /_ / /_/ /  /   _  /   / /_/ / /_/ / _  / /  __/
 	\__/ \____//_/    /_/    \____/\__,_/  /_/  \___/
 
-  torrodle v1.0.3 [by a1phat0ny] (https://github.com/a1phat0ny/torrodle)
+    ‣ You are using %v
 `
-
+	heart := color.HiRedString("❤")
+	bold := color.New(color.Bold)
 	// Startup
-	fmt.Println(banner)
+	fmt.Printf(banner, name)
+	bold.Print("    Made with ")
+	fmt.Print(heart)
+	bold.Print(" by a1phat0ny ")
+	fmt.Print("(https://github.com/a1phat0ny/torrodle)\n\n")
 	logrus.Debug(configurations)
 
 	// Stream torrent from magnet provided in command-line
