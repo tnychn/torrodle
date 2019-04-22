@@ -34,13 +34,13 @@ var dataDir string
 var subtitlesDir string
 
 func errorPrint(arg ...interface{}) {
-	c := color.New(color.FgRed).Add(color.Bold)
+	c := color.New(color.FgHiRed).Add(color.Bold)
 	c.Print("✘ ")
 	c.Println(arg...)
 }
 
 func infoPrint(arg ...interface{}) {
-	c := color.New(color.FgYellow)
+	c := color.New(color.FgHiYellow)
 	c.Print("[i] ")
 	c.Println(arg...)
 }
@@ -294,7 +294,7 @@ func getSubtitles(query string) (subtitlePath string) {
 	index, _ := strconv.Atoi(choice)
 	subtitle := subtitles[index-1]
 	// download
-	fmt.Println(color.YellowString("[i] Downloading subtitle to"), subtitlesDir)
+	fmt.Println(color.HiYellowString("[i] Downloading subtitle to"), subtitlesDir)
 	subtitlePath = filepath.Join(subtitlesDir, subtitle.SubFileName)
 	err = c.DownloadTo(&subtitle, subtitlePath)
 	if err != nil {
@@ -307,7 +307,7 @@ func getSubtitles(query string) (subtitlePath string) {
 	return
 }
 
-func playVideo(player *player.Player, source models.Source, subtitlePath string) {
+func startClient(player *player.Player, source models.Source, subtitlePath string) {
 	// Play the video
 	infoPrint("Streaming torrent...")
 	// create client
@@ -324,12 +324,13 @@ func playVideo(player *player.Player, source models.Source, subtitlePath string)
 	// start client
 	c.Start()
 	// handle video playing
-	if player != nil {
+	if player != nil && subtitlePath != "" {
 		// serve via HTTP
 		c.Serve()
+		fmt.Println(color.HiYellowString("[i] Serving on"), c.URL)
 		// open player
 		player.Start(c.URL, subtitlePath)
-		infoPrint("Launched player", "("+player.Name+")")
+		fmt.Println(color.HiYellowString("[i] Launched player"), player.Name)
 	}
 	// handle exit signals
 	interruptChannel := make(chan os.Signal, 1)
@@ -447,7 +448,7 @@ func main() {
 			p = player.GetPlayer(playerChoice)
 		}
 		// start
-		playVideo(p, source, "")
+		startClient(p, source, "")
 	}
 
 	// Prepare options and query for searching torrents
@@ -522,14 +523,15 @@ func main() {
 		return
 	}
 	var p *player.Player
+	var subtitlePath string
 	if playerChoice == "None" {
 		p = nil
 	} else {
+		// Get subtitles
+		subtitlePath = getSubtitles(source.Title)
 		p = player.GetPlayer(playerChoice)
 	}
 
-	// Get subtitles
-	subtitlePath := getSubtitles(source.Title)
 	// Start playing video...
-	playVideo(p, source, subtitlePath)
+	startClient(p, source, subtitlePath)
 }
