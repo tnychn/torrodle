@@ -457,10 +457,11 @@ func main() {
 		errorPrint("Operation aborted")
 		return
 	}
+	cat := torrodle.Category(strings.ToUpper(category))
 	options := []string{}
 	// check for availibility of each category for each provider
 	for _, provider := range torrodle.AllProviders {
-		if torrodle.GetCategoryURL(category, provider.GetCategories()) != "" {
+		if torrodle.GetCategoryURL(cat, provider.GetCategories()) != "" {
 			options = append(options, provider.GetName())
 		}
 	}
@@ -480,10 +481,11 @@ func main() {
 		errorPrint("Operation aborted")
 		return
 	}
+	sb := torrodle.SortBy(strings.ToLower(sortBy))
 
 	// Call torrodle API to search for torrents
 	limit := configurations.ResultsLimit
-	results := torrodle.ListResults(providers, query, limit, category, sortBy)
+	results := torrodle.ListResults(providers, query, limit, cat, sb)
 	if len(results) == 0 {
 		errorPrint("No torrents found")
 		return

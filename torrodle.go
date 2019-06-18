@@ -2,7 +2,6 @@ package torrodle
 
 import (
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -19,27 +18,32 @@ import (
 	"github.com/a1phat0ny/torrodle/providers/yify"
 )
 
-const (
-	CategoryAll   string = "ALL"
-	CategoryMovie string = "MOVIE"
-	CategoryTV    string = "TV"
-	CategoryAnime string = "ANIME"
-	CategoryPorn  string = "PORN"
+type Category string
+type SortBy string
 
-	SortByDefault  string = "default"
-	SortBySeeders  string = "seeders"
-	SortByLeechers string = "leechers"
-	SortBySize     string = "size"
+const (
+	CategoryAll   Category = "ALL"
+	CategoryMovie Category = "MOVIE"
+	CategoryTV    Category = "TV"
+	CategoryAnime Category = "ANIME"
+	CategoryPorn  Category = "PORN"
+
+	SortByDefault  SortBy = "default"
+	SortBySeeders  SortBy = "seeders"
+	SortByLeechers SortBy = "leechers"
+	SortBySize     SortBy = "size"
 )
 
 // Expose all the providers
-var SukebeiProvider = sukebei.New()
-var ThePirateBayProvider = thepiratebay.New()
-var LimeTorrentsProvider = limetorrents.New()
-var Torrentz2Provider = torrentz.New()
-var RarbgProvider = rarbg.New()
-var LeetxProvider = leetx.New()
-var YifyProvider = yify.New()
+var (
+	SukebeiProvider      = sukebei.New()
+	ThePirateBayProvider = thepiratebay.New()
+	LimeTorrentsProvider = limetorrents.New()
+	Torrentz2Provider    = torrentz.New()
+	RarbgProvider        = rarbg.New()
+	LeetxProvider        = leetx.New()
+	YifyProvider         = yify.New()
+)
 
 var AllProviders = [...]models.ProviderInterface{
 	SukebeiProvider,
@@ -53,7 +57,7 @@ var AllProviders = [...]models.ProviderInterface{
 
 // ListProviderResults lists all results queried from this specific provider only.
 // It sorts the results and returns at most {count} results.
-func ListProviderResults(provider models.ProviderInterface, query string, count int, category string, sortBy string) []models.Source {
+func ListProviderResults(provider models.ProviderInterface, query string, count int, category Category, sortBy SortBy) []models.Source {
 	var sources []models.Source
 	categories := provider.GetCategories()
 	caturl := GetCategoryURL(category, categories)
@@ -77,7 +81,7 @@ func ListProviderResults(provider models.ProviderInterface, query string, count 
 // ListResults lists all results queried from all the specified providers.
 // It sorts the results after collected all the sorted results from different providers.
 // Returns at most {count} results.
-func ListResults(providers []interface{}, query string, count int, category string, sortBy string) []models.Source {
+func ListResults(providers []interface{}, query string, count int, category Category, sortBy SortBy) []models.Source {
 	argProviders := []models.ProviderInterface{}
 	for _, p := range providers {
 		switch p.(type) {
@@ -130,9 +134,9 @@ func ListResults(providers []interface{}, query string, count int, category stri
 }
 
 // GetCategoryURL returns CategoryURL according to the category name (constant).
-func GetCategoryURL(category string, categories models.Categories) models.CategoryURL {
+func GetCategoryURL(category Category, categories models.Categories) models.CategoryURL {
 	var caturl models.CategoryURL
-	switch strings.ToUpper(category) {
+	switch category {
 	case CategoryAll:
 		caturl = categories.All
 	case CategoryMovie:
@@ -144,14 +148,14 @@ func GetCategoryURL(category string, categories models.Categories) models.Catego
 	case CategoryPorn:
 		caturl = categories.Porn
 	default:
-		logrus.Fatalf("Invalid category: %v\n", category)
+		logrus.Fatalln("Invalid category")
 	}
 	return caturl
 }
 
-func GetSortedResults(results []models.Source, sortBy string) []models.Source {
+func GetSortedResults(results []models.Source, sortBy SortBy) []models.Source {
 	// Sort results
-	switch strings.ToLower(sortBy) {
+	switch sortBy {
 	case SortByDefault:
 		// nothing to do
 	case SortBySeeders:
@@ -167,7 +171,7 @@ func GetSortedResults(results []models.Source, sortBy string) []models.Source {
 			return results[i].FileSize > results[j].FileSize
 		})
 	default:
-		logrus.Fatalf("Invalid SortBy: %v", sortBy)
+		logrus.Fatalln("Invalid SortBy")
 	}
 	return results
 }
