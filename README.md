@@ -34,6 +34,7 @@ It then streams the video via HTTP (along with its subtitles) and play it with a
   - [YIFY](#yify-)
   - [Torrentz2](#torrentz2)
   - [LimeTorrents](#limetorrents)
+  - [Sukebei](#sukebei)
   - [OpenSubtitles](#opensubtitles)
 - [Credit](#credit)
 
@@ -293,8 +294,6 @@ type Provider struct {
  
  (`*` recommended provider)
  
- More providers comming soon !
- 
  ### OpenSubtitles
  
  The only provider for providing movies / tv series subtitles.
@@ -313,6 +312,8 @@ type Provider struct {
  8. Russian `rus`
  9. Portuguese `por`
 
+ > **More providers comming soon!**
+ 
 ## Credit
 
 This project is inspired by [@Fabio Spampinato](https://github.com/fabiospampinato)'s [cliflix](https://github.com/fabiospampinato/cliflix).
