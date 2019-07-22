@@ -1,6 +1,6 @@
 <h1 align="center">torrodle</h1>
 
-<p align="center"><em>A powerful torrent scraper & streamer</em></p>
+<p align="center"><em>A mighty magnet scraper & streamer</em></p>
 
 <p align="center"><img src="demo.gif" width=70%></p>
 
@@ -10,7 +10,7 @@
 </p>
 
 **torrodle** is a command-line program which search and gather magnet links of movies, tv shows, animes and porns from [providers](#available-providers).
-It then streams the video via HTTP (along with its subtitles) and play it with a user preferred video player (such as *vlc* and *mpv*).
+It then streams the torrent via HTTP (along with its subtitles) and plays it with a user preferred video player (such as *vlc* and *mpv*).
 
 > If you don't know what BitTorrent is, you shouldn't be using **torrodle**. There are some copyrighted content which might be illegal downloading them in your country.
 
@@ -19,40 +19,38 @@ It then streams the video via HTTP (along with its subtitles) and play it with a
 - [Installation](#installation)
   - [Binary](#binary)
   - [Go Get](#go-get)
-    - [Command-line tool](#command-line-tool)
-    - [Library](#library)
   - [Build From Source](#build-from-source)
   - [Dependencies](#dependencies)
-- [Usage](#usage)
-  - [Search for torrents](#search-for-torrents)
-  - [Stream from own magnet](#stream-from-own-magnet)
-- [Configurations](#configurations)
-- [Providers](#available-providers)
-  - [1337x](#1337x-)
-  - [RARBG](#rarbg-)
-  - [The Pirate Bay](#the-pirate-bay-)
-  - [YIFY](#yify-)
-  - [Torrentz2](#torrentz2)
-  - [LimeTorrents](#limetorrents)
-  - [Sukebei](#sukebei)
-  - [OpenSubtitles](#opensubtitles)
+- [CLI Usage](#cli-usage)
+	- [Search for torrents](#search-for-torrents)
+	- [Stream from own magnet](#stream-from-own-magnet)
+	- [Configurations](#configurations)
+- [API Usage](#api-usage)
+- [Providers](#providers)
+	- [1337x](#1337x-)
+	- [RARBG](#rarbg-)
+	- [The Pirate Bay](#the-pirate-bay-)
+	- [YIFY](#yify-)
+	- [Torrentz2](#torrentz2)
+	- [LimeTorrents](#limetorrents)
+	- [Sukebei](#sukebei)
+	- [OpenSubtitles](#opensubtitles)
+- [Contributing](#contributing)
 - [Credit](#credit)
 
 ## Features
 
-* Lightning fast ⚡️
-* Simple to use 🚸
-* Built-in torrent streaming client via HTTP (refined from `go-peerflix`)
-* Watch the video while it is being downloaded 🔰 
-* Query multiple providers in a single search 🔎
-* Sorted results from 5 different providers at once 🚀 
-* Along with subtitles fetching for the video 📄
+* ⚡️ Lightning fast
+* 🚸 Simple to use
+* 🤖 Built-in torrent streaming client via HTTP (refined from `go-peerflix`)
+* 🔰 Watch the video while it is being downloaded 
+* 🔎 Query multiple providers in a single search
+* 🚀 Sorted results from 7 different providers at once 
+* 📄 Along with subtitles fetching for the video
 
 ## Installation
 
 ### Binary
-
-**For installing the command-line tool only**
 
 Download the latest stable release of the binary at [releases](https://github.com/a1phat0ny/torrodle/releases).
 
@@ -60,17 +58,9 @@ Download the latest stable release of the binary at [releases](https://github.co
 
 Make sure you have Go installed on your machine.
 
-#### Command-line tool
-
 `$ go get github.com/a1phat0ny/torrodle/cmd/...`
 
-#### Library
-
-`$ go get github.com/a1phat0ny/torrodle`
-
 ### Build From Source
-
-**For installing the command-line tool only**
 
 ```bash
 $ git clone github.com/a1phat0ny/torrodle
@@ -91,24 +81,24 @@ Dependencies are listed in [`go.mod`](./go.mod) file.
 7. [tablewriter](https://github.com/olekukonko/tablewriter) -- table rendering
 8. [survey](https://github.com/AlecAivazis/survey) -- pretty prompting
 
-## Usage
+## CLI Usage
 
-**Recommended video player:** [MPV](https://mpv.io)
+**Recommended video player:** [mpv](https://mpv.io)
 
 ### Search for torrents
 
-Enter `torrodle` in your terminal. That's all !
+Enter `torrodle` in your terminal. That's it!
 
 This command will launch a *wizard* that will help you search for torrents.
 
 ### Stream from own magnet
 
-Enter `torrodle "magnet uri"` in your terminal. Choose your preferred video player and enjoy !
+Enter `torrodle "magnet uri"` in your terminal. Choose your preferred video player and enjoy!
 
-***NOTE:** For auto executing of video players, only **MPV** and **VLC** are supported.
-For other video players, you can choose `None` in video player options prompt and open your video player with the stream url.*
+***NOTE:** For auto executing of video players, only **mpv** and **vlc** are supported.
+For other video players, you can choose `None` in the video player options prompt. Then open up your video player and play from the stream url.*
 
-## Configurations
+### Configurations
 
 **Path to the config file:** `~/.torrodle.json`
 
@@ -128,7 +118,7 @@ For other video players, you can choose `None` in video player options prompt an
 * `HostPort` (default: `8080`) : Listen port for HTTP localhost video streaming (`http://localhost:<port>`).
 * `Debug` (default: `false`) : Detailed debug messages will be printed to output if `true`.
 
-## API
+## API Usage
 
 ### Constants
 
@@ -234,9 +224,9 @@ type Provider struct {
 }
 ```
 
-## Available Providers
+## Providers
 
-### 1337x *
+### 1337x 🌟
 
 **`torrodle/providers/leetx`**
 
@@ -244,7 +234,7 @@ type Provider struct {
 
 * **Categories:** Movie, TV, Anime, Porn (All)
  
-### RARBG *
+### RARBG 🌟
 
 **`torrodle/providers/rarbg`**
  
@@ -252,7 +242,7 @@ type Provider struct {
  
 * **Categories:** Movie, TV, Porn
 
-### The Pirate Bay *
+### The Pirate Bay 🌟
 
 **`torrodle/providers/thepiratebay`**
 
@@ -260,7 +250,7 @@ type Provider struct {
 
 * **Categories:** Movie, TV, Porn
  
-### YIFY *
+### YIFY 🌟
 
 **`torrodle/providers/yify`**
  
@@ -291,29 +281,34 @@ type Provider struct {
 * **Site:** https://sukebei.nyaa.si/
  
 * **Categories:** Porn (Japanese AV)
- 
- (`*` recommended provider)
- 
- ### OpenSubtitles
- 
- The only provider for providing movies / tv series subtitles.
- 
- API client powered by [oz/osdb](https://github.com/oz/osdb).
- 
- #### Available languages:
- 
- 1. English `eng`
- 2. Chinese (simplified) `chi`
- 3. Chinese (traditional) `zht`
- 4. Arabic `ara`
- 5. Hindi `hin`
- 6. Dutch `dut`
- 7. French `fre`
- 8. Russian `rus`
- 9. Portuguese `por`
 
- > **More providers comming soon!**
+> 🌟 are my personal favourites!
+
+
+### OpenSubtitles
  
+The only provider for providing movies / tv series subtitles.
+ 
+API client powered by [oz/osdb](https://github.com/oz/osdb).
+ 
+#### Available languages:
+ 
+1. English `eng`
+2. Chinese (simplified) `chi`
+3. Chinese (traditional) `zht`
+4. Arabic `ara`
+5. Hindi `hin`
+6. Dutch `dut`
+7. French `fre`
+8. Russian `rus`
+9. Portuguese `por`
+
+> **More providers comming soon!**
+
+## Contributing
+
+If you have any ideas on how to improve this project or you think there is a lack of feature, feel free to suggest it on a [issue](https://github.com/a1phat0ny/torrodle/issues), or even better, open a [pull request](https://github.com/a1phat0ny/torrodle/pulls). Any contributions will be greatly appreciated!
+
 ## Credit
 
 This project is inspired by [@Fabio Spampinato](https://github.com/fabiospampinato)'s [cliflix](https://github.com/fabiospampinato/cliflix).
