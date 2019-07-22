@@ -26,7 +26,7 @@ It then streams the torrent via HTTP (along with its subtitles) and plays it wit
 	- [Stream from own magnet](#stream-from-own-magnet)
 	- [Configurations](#configurations)
 - [API Usage](#api-usage)
-- [Providers](#providers)
+- [Available Providers](#available-providers)
 	- [1337x](#1337x-)
 	- [RARBG](#rarbg-)
 	- [The Pirate Bay](#the-pirate-bay-)
@@ -224,7 +224,7 @@ type Provider struct {
 }
 ```
 
-## Providers
+## Available Providers
 
 ### 1337x 🌟
 
