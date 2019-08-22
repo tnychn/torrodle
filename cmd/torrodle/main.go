@@ -419,7 +419,7 @@ func main() {
 
     ‣ You are using %v
 `
-	heart := color.HiRedString("❤")
+	heart := color.HiRedString("♥︎")
 	bold := color.New(color.Bold)
 	// Startup
 	fmt.Printf(banner, name)
