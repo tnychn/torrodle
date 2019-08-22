@@ -100,7 +100,6 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 
 func getSourceWorker(source models.Source, results *[]models.Source, group *sync.WaitGroup) {
 	var magnet string
-	var torrents []string
 
 	_, html, err := request.Get(nil, source.URL, nil)
 	if err != nil {
@@ -109,17 +108,12 @@ func getSourceWorker(source models.Source, results *[]models.Source, group *sync
 		return
 	}
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
-	list := doc.Find("ul.download-links-dontblock.btn-wrap-list")
-	// Get all urls
-	torrentsList := list.Find("ul.dropdown-menu")
-	torrentsList.Find("a.btn").Each(func(i int, s *goquery.Selection) {
-		torrent, _ := s.Attr("href")
-		if torrent != "" {
-			torrents = append(torrents, torrent)
+	dropdown := doc.Find("ul.dropdown-menu")
+	li := dropdown.Find("li")
+	if li != nil {
+		if val, ok := li.Last().Find("a").Attr("href"); ok {
+			magnet = val
 		}
-	})
-	if len(torrents) != 0 {
-		magnet = torrents[len(torrents)-1]
 	}
 	// Assignment
 	source.Magnet = magnet

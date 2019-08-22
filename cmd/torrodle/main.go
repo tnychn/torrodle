@@ -25,6 +25,8 @@ import (
 	"github.com/a1phat0ny/torrodle/player"
 )
 
+const version = "1.0.4"
+
 var u, _ = user.Current()
 var home = u.HomeDir
 var configFile = filepath.Join(home, ".torrodle.json")
@@ -406,7 +408,7 @@ func init() {
 }
 
 func main() {
-	name := color.HiYellowString("[torrodle v1.0.3]")
+	name := color.HiYellowString("[torrodle v%s]", version)
 	banner :=
 `
 	_____                          ______________     
