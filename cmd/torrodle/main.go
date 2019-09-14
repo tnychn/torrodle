@@ -433,8 +433,8 @@ func main() {
 	if len(os.Args) > 1 {
 		// make source
 		source := models.Source{
-			From: "User Provided",
-			Title: "Unknown",
+			From:   "User Provided",
+			Title:  "Unknown",
 			Magnet: os.Args[1],
 		}
 		// player

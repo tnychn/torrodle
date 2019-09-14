@@ -152,7 +152,7 @@ func newToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	response := struct{
+	response := struct {
 		Token string `json:"token"`
 	}{}
 	json.Unmarshal([]byte(resp), &response)

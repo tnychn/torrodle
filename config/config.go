@@ -7,7 +7,7 @@ import (
 )
 
 type TorrodleConfig struct {
-	DataDir   string `json:"DataDir"`
+	DataDir      string `json:"DataDir"`
 	ResultsLimit int    `json:"ResultsLimit"`
 	TorrentPort  int    `json:"TorrentPort"`
 	HostPort     int    `json:"HostPort"`
@@ -23,7 +23,7 @@ func (t TorrodleConfig) String() string {
 
 func InitConfig(path string) error {
 	config := TorrodleConfig{
-		DataDir:   "",
+		DataDir:      "",
 		ResultsLimit: 100,
 		TorrentPort:  9999,
 		HostPort:     8080,

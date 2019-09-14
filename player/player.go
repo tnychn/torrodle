@@ -5,23 +5,24 @@ We did some modifications on it in order to let it fit into 'torrodle'
 package player
 
 import (
-	"github.com/sirupsen/logrus"
 	"os/exec"
 	"runtime"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 // Players holds structs of all supported players.
 var Players = []Player{
 	{
-		Name:            "MPV",
+		Name:            "mpv",
 		DarwinCommand:   []string{"mpv"},
 		LinuxCommand:    []string{"mpv"},
 		WindowsCommand:  []string{"mpv"},
 		SubtitleCommand: "--sub-file=",
 	},
 	{
-		Name:            "VLC",
+		Name:            "vlc",
 		DarwinCommand:   []string{"open", "-a", "vlc"},
 		LinuxCommand:    []string{"vlc"},
 		WindowsCommand:  []string{"cmd", "/C", "start", "%ProgramFiles%\\VideoLAN\\VLC\\vlc.exe"},
@@ -56,7 +57,7 @@ func (player *Player) Start(url string, subtitlePath string) {
 	}
 	command = append(command, url)
 	if subtitlePath != "" {
-		command = append(command, player.SubtitleCommand + subtitlePath)
+		command = append(command, player.SubtitleCommand+subtitlePath)
 	}
 	logrus.Debugf("command: %v\n", command)
 	cmd := exec.Command(command[0], command[1:]...)
