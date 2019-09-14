@@ -15,7 +15,7 @@ func Request(client *http.Client, method string, url string, header http.Header)
 	if client == nil {
 		// Make a new http client with cookie jar if no existing client is provided
 		jar, _ := cookiejar.New(nil)
-		client = &http.Client{Timeout: 10 * time.Second, Jar: jar}
+		client = &http.Client{Timeout: 30 * time.Second, Jar: jar}
 	}
 	// Build a new request
 	req, err := http.NewRequest(method, url, nil)
