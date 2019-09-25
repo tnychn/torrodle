@@ -23,9 +23,9 @@ var Players = []Player{
 	},
 	{
 		Name:            "vlc",
-		DarwinCommand:   []string{"open", "-a", "vlc"},
+		DarwinCommand:   []string{"/Applications/VLC.app/Contents/MacOS/VLC"},
 		LinuxCommand:    []string{"vlc"},
-		WindowsCommand:  []string{"cmd", "/C", "start", "%ProgramFiles%\\VideoLAN\\VLC\\vlc.exe"},
+		WindowsCommand:  []string{"%ProgramFiles%\\VideoLAN\\VLC\\vlc.exe"},
 		SubtitleCommand: "--sub-file=",
 	},
 }
