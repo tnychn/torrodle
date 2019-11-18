@@ -17,8 +17,8 @@
     <a href="#features">Features</a> |
     <a href="#installation">Install</a> |
     <a href="providers.md">Providers</a> |
-    <a href="cli.md">CLI</a> |
-    <a href="api.md">API</a>
+    <a href="CLI.md">CLI</a> |
+    <a href="API.md">API</a>
     </strong>
 </div>
 
