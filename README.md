@@ -22,7 +22,7 @@
 </div>
 
 <div align="center">
-    <sub><strong>Made with ❤️ by a1phat0ny</strong></sub>
+    <sub><strong>Made with ♥︎ by a1phat0ny</strong></sub>
     <br>
     <sub><strong>MIT © 2019 Tony Chan</strong></sub>
 </div>
