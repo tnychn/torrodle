@@ -9,7 +9,6 @@
     <a href="https://github.com/a1phat0ny/torrodle/releases"><img alt="release date" src="https://img.shields.io/github/release-date/a1phat0ny/torrodle"></a>
     <a href="https://github.com/a1phat0ny/torrodle/releases"><img alt="downloads" src="https://img.shields.io/github/downloads/a1phat0ny/torrodle/total"></a>
     <a href="./LICENSE.txt"><img alt="license" src="https://img.shields.io/github/license/a1phat0ny/torrodle.svg"></a>
-    <a href="https://paypal.me/tonychan2342"><img alt="donate" src="https://img.shields.io/badge/PayPal-donate!-blue?logo=PayPal"></a>
 </p>
 
 <div align="center">
@@ -94,9 +93,9 @@ See [`go.mod`](./go.mod).
 
 ## Usage
 
-For command-line (CLI) usage, see [`cli.md`](cli.md).
+For command-line (CLI) usage, see [`CLI.md`](CLI.md).
 
-For API usage, see [`api.md`](api.md).
+For API usage, see [`API.md`](API.md).
 
 ## Contributing
 
