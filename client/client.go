@@ -17,7 +17,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/sirupsen/logrus"
 
-	"github.com/a1phat0ny/torrodle/models"
+	"github.com/tnychn/torrodle/models"
 )
 
 // Client manages the torrent downloading.

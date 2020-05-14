@@ -10,8 +10,8 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/sirupsen/logrus"
 
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/request"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/request"
 )
 
 const (
@@ -92,31 +92,29 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 	group := sync.WaitGroup{}
 	for _, source := range sources {
 		group.Add(1)
-		go getSourceWorker(source, results, &group) // directly append the completed sources to `results`
+		go func() {
+			var magnet string
+
+			_, html, err := request.Get(nil, source.URL, nil)
+			if err != nil {
+				logrus.Errorln(err)
+				group.Done()
+				return
+			}
+			doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
+			dropdown := doc.Find("ul.dropdown-menu")
+			li := dropdown.Find("li")
+			if li != nil {
+				if val, ok := li.Last().Find("a").Attr("href"); ok {
+					magnet = val
+				}
+			}
+			// Assignment
+			source.Magnet = magnet
+			*results = append(*results, source)
+			group.Done()
+		}()
 	}
 	group.Wait()
 	wg.Done()
-}
-
-func getSourceWorker(source models.Source, results *[]models.Source, group *sync.WaitGroup) {
-	var magnet string
-
-	_, html, err := request.Get(nil, source.URL, nil)
-	if err != nil {
-		logrus.Errorln(err)
-		group.Done()
-		return
-	}
-	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
-	dropdown := doc.Find("ul.dropdown-menu")
-	li := dropdown.Find("li")
-	if li != nil {
-		if val, ok := li.Last().Find("a").Attr("href"); ok {
-			magnet = val
-		}
-	}
-	// Assignment
-	source.Magnet = magnet
-	*results = append(*results, source)
-	group.Done()
 }

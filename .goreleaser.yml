@@ -52,7 +52,7 @@ release:
   # project v1.0.0
   name_template: "{{ .ProjectName }} v{{ .Version }}"
   github:
-    owner: a1phat0ny
+    owner: tnychn
     name: torrodle
   draft: true
   prerelease: auto
