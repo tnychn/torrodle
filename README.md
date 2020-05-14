@@ -5,10 +5,10 @@
 <p align="center"><img src="demo.gif" width=70%></p>
 
 <p align="center">
-    <a href="https://github.com/a1phat0ny/torrodle/releases"><img alt="github releases" src="https://img.shields.io/github/v/release/a1phat0ny/torrodle"></a>
-    <a href="https://github.com/a1phat0ny/torrodle/releases"><img alt="release date" src="https://img.shields.io/github/release-date/a1phat0ny/torrodle"></a>
-    <a href="https://github.com/a1phat0ny/torrodle/releases"><img alt="downloads" src="https://img.shields.io/github/downloads/a1phat0ny/torrodle/total"></a>
-    <a href="./LICENSE.txt"><img alt="license" src="https://img.shields.io/github/license/a1phat0ny/torrodle.svg"></a>
+    <a href="https://github.com/tnychn/torrodle/releases"><img alt="github releases" src="https://img.shields.io/github/v/release/tnychn/torrodle"></a>
+    <a href="https://github.com/tnychn/torrodle/releases"><img alt="release date" src="https://img.shields.io/github/release-date/tnychn/torrodle"></a>
+    <a href="https://github.com/tnychn/torrodle/releases"><img alt="downloads" src="https://img.shields.io/github/downloads/tnychn/torrodle/total"></a>
+    <a href="./LICENSE.txt"><img alt="license" src="https://img.shields.io/github/license/tnychn/torrodle.svg"></a>
 </p>
 
 <div align="center">
@@ -22,7 +22,7 @@
 </div>
 
 <div align="center">
-    <sub><strong>Made with ♥︎ by a1phat0ny</strong></sub>
+    <sub><strong>Made with ♥︎ by tnychn</strong></sub>
     <br>
     <sub><strong>MIT © 2019 Tony Chan</strong></sub>
 </div>
@@ -60,20 +60,20 @@ It then streams the torrent via HTTP (along with its subtitles) and plays it wit
 
 ### Binary
 
-Download the latest stable release of the binary at [releases](https://github.com/a1phat0ny/torrodle/releases).
+Download the latest stable release of the binary at [releases](https://github.com/tnychn/torrodle/releases).
 
 ### Go Get
 
 Make sure you have **Go 1.12+** installed on your machine.
 
-`$ go get github.com/a1phat0ny/torrodle/cmd/...`
+`$ go get github.com/tnychn/torrodle/cmd/...`
 
 ### Build From Source
 
 Make sure you have **Go 1.12+** installed on your machine.
 
 ```shell script
-$ git clone github.com/a1phat0ny/torrodle.git
+$ git clone github.com/tnychn/torrodle.git
 $ cd torrodle
 $ go build cmd/torrodle/main.go
 ```
@@ -99,7 +99,7 @@ For API usage, see [`API.md`](API.md).
 
 ## Contributing
 
-If you have any ideas on how to improve this project or you think there is a lack of feature, feel free to suggest it on a [issue](https://github.com/a1phat0ny/torrodle/issues), or even better, open a [pull request](https://github.com/a1phat0ny/torrodle/pulls). Any contributions will be greatly appreciated!
+If you have any ideas on how to improve this project or you think there is a lack of feature, feel free to suggest it on a [issue](https://github.com/tnychn/torrodle/issues), or even better, open a [pull request](https://github.com/tnychn/torrodle/pulls). Any contributions will be greatly appreciated!
 
 ## Credit
 
