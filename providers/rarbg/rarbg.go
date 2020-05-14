@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/request"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/request"
 	"github.com/sirupsen/logrus"
 )
 

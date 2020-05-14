@@ -11,8 +11,8 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/sirupsen/logrus"
 
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/request"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/request"
 )
 
 const (

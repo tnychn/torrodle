@@ -5,7 +5,7 @@ package models
 
 import (
 	"fmt"
-	"github.com/a1phat0ny/torrodle/utils"
+	"github.com/tnychn/torrodle/utils"
 	"github.com/sirupsen/logrus"
 	"net/url"
 	"sync"

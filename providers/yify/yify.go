@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/request"
-	"github.com/a1phat0ny/torrodle/utils"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/request"
+	"github.com/tnychn/torrodle/utils"
 	"github.com/sirupsen/logrus"
 )
 

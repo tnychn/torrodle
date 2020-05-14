@@ -18,11 +18,11 @@ import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/AlecAivazis/survey.v1"
 
-	"github.com/a1phat0ny/torrodle"
-	"github.com/a1phat0ny/torrodle/client"
-	"github.com/a1phat0ny/torrodle/config"
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/player"
+	"github.com/tnychn/torrodle"
+	"github.com/tnychn/torrodle/client"
+	"github.com/tnychn/torrodle/config"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/player"
 )
 
 const version = "1.0.4"
@@ -425,8 +425,8 @@ func main() {
 	fmt.Printf(banner, name)
 	bold.Print("    Made with ")
 	fmt.Print(heart)
-	bold.Print(" by a1phat0ny ")
-	fmt.Print("(https://github.com/a1phat0ny/torrodle)\n\n")
+	bold.Print(" by tnychn ")
+	fmt.Print("(https://github.com/tnychn/torrodle)\n\n")
 	logrus.Debug(configurations)
 
 	// Stream torrent from magnet provided in command-line

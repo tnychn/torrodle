@@ -8,14 +8,14 @@ import (
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
 
-	"github.com/a1phat0ny/torrodle/models"
-	"github.com/a1phat0ny/torrodle/providers/leetx"
-	"github.com/a1phat0ny/torrodle/providers/limetorrents"
-	"github.com/a1phat0ny/torrodle/providers/rarbg"
-	"github.com/a1phat0ny/torrodle/providers/sukebei"
-	"github.com/a1phat0ny/torrodle/providers/thepiratebay"
-	"github.com/a1phat0ny/torrodle/providers/torrentz"
-	"github.com/a1phat0ny/torrodle/providers/yify"
+	"github.com/tnychn/torrodle/models"
+	"github.com/tnychn/torrodle/providers/leetx"
+	"github.com/tnychn/torrodle/providers/limetorrents"
+	"github.com/tnychn/torrodle/providers/rarbg"
+	"github.com/tnychn/torrodle/providers/sukebei"
+	"github.com/tnychn/torrodle/providers/thepiratebay"
+	"github.com/tnychn/torrodle/providers/torrentz"
+	"github.com/tnychn/torrodle/providers/yify"
 )
 
 type Category string
