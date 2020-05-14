@@ -131,9 +131,9 @@ func (client *Client) PrintProgress() {
 	size := humanize.Bytes(uint64(total))
 	percentage := float64(currentProgress) / float64(total) * 100
 	output := bufio.NewWriter(os.Stdout)
-	fmt.Fprintf(output, "Progress: %s / %s  %.2f%%\r", complete, size, percentage)
+	_, _ = fmt.Fprintf(output, "Progress: %s / %s  %.2f%%\r", complete, size, percentage)
 	// TODO: print download speed
-	output.Flush()
+	_ = output.Flush()
 }
 
 // Close cleans up the connections of the client.

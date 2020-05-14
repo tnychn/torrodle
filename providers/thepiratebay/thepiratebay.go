@@ -20,12 +20,12 @@ const (
 	Site = "https://thepiratebay.org"
 )
 
-type ThePirateBayProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &ThePirateBayProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -37,7 +37,7 @@ func New() models.ProviderInterface {
 	return provider
 }
 
-func (provider *ThePirateBayProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	results, err := provider.Query(query, categoryURL, count, 30, 0, extractor)
 	return results, err
 }
@@ -50,7 +50,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 		wg.Done()
 		return
 	}
-	sources := []models.Source{}
+	var sources []models.Source
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table#searchResult").Find("tbody")
 	table.Find("tr").Each(func(i int, tr *goquery.Selection) {

@@ -37,14 +37,14 @@ var subtitlesDir string
 
 func errorPrint(arg ...interface{}) {
 	c := color.New(color.FgHiRed).Add(color.Bold)
-	c.Print("✘ ")
-	c.Println(arg...)
+	_, _ = c.Print("✘ ")
+	_, _ = c.Println(arg...)
 }
 
 func infoPrint(arg ...interface{}) {
 	c := color.New(color.FgHiYellow)
-	c.Print("[i] ")
-	c.Println(arg...)
+	_, _ = c.Print("[i] ")
+	_, _ = c.Println(arg...)
 }
 
 func pickCategory() string {
@@ -53,19 +53,19 @@ func pickCategory() string {
 		Message: "Choose a category:",
 		Options: []string{"All", "Movie", "TV", "Anime", "Porn"},
 	}
-	survey.AskOne(prompt, &category, nil)
+	_ = survey.AskOne(prompt, &category, nil)
 	return category
 }
 
 func pickProviders(options []string) []interface{} {
-	chosen := []string{}
+	var chosen []string
 	prompt := &survey.MultiSelect{
 		Message: "Choose providers:",
 		Options: options,
 	}
-	survey.AskOne(prompt, &chosen, nil)
+	_ = survey.AskOne(prompt, &chosen, nil)
 
-	providers := []interface{}{}
+	var providers []interface{}
 	for _, choice := range chosen {
 		for _, provider := range torrodle.AllProviders {
 			if provider.GetName() == choice {
@@ -79,7 +79,7 @@ func pickProviders(options []string) []interface{} {
 func inputQuery() string {
 	query := ""
 	prompt := &survey.Input{Message: "Search Torrents:"}
-	survey.AskOne(prompt, &query, nil)
+	_ = survey.AskOne(prompt, &query, nil)
 	return query
 }
 
@@ -90,7 +90,7 @@ func pickSortBy() string {
 		Default: "default",
 		Options: []string{"default", "seeders", "leechers", "size"},
 	}
-	survey.AskOne(prompt, &sortBy, nil)
+	_ = survey.AskOne(prompt, &sortBy, nil)
 	return sortBy
 }
 
@@ -104,7 +104,7 @@ func pickPlayer() string {
 		Message: "Player:",
 		Options: options,
 	}
-	survey.AskOne(prompt, &playerChoice, nil)
+	_ = survey.AskOne(prompt, &playerChoice, nil)
 	return playerChoice
 }
 
@@ -157,7 +157,7 @@ func chooseResults(results []models.Source) string {
 			return nil
 		},
 	}
-	survey.Ask([]*survey.Question{question}, &choice)
+	_ = survey.Ask([]*survey.Question{question}, &choice)
 	return choice
 }
 
@@ -173,20 +173,20 @@ func pickLangs() []string {
 		"Portuguese":            "por",
 		"Russian":               "rus",
 	}
-	languagesOpts := []string{}
+	var languagesOpts []string
 	for k := range languagesMap {
 		languagesOpts = append(languagesOpts, k)
 	}
 
-	chosen := []string{}
+	var chosen []string
 	prompt := &survey.MultiSelect{
 		Message: "Choose subtitles languages:",
 		Default: []string{"English"},
 		Options: languagesOpts,
 	}
-	survey.AskOne(prompt, &chosen, nil)
+	_ = survey.AskOne(prompt, &chosen, nil)
 
-	languages := []string{}
+	var languages []string
 	for _, choice := range chosen {
 		languages = append(languages, languagesMap[choice])
 	}
@@ -249,7 +249,7 @@ func chooseSubtitles(subtitles osdb.Subtitles) string {
 			return nil
 		},
 	}
-	survey.Ask([]*survey.Question{question}, &choice)
+	_ = survey.Ask([]*survey.Question{question}, &choice)
 	return choice
 }
 
@@ -259,7 +259,7 @@ func getSubtitles(query string) (subtitlePath string) {
 	prompt := &survey.Confirm{
 		Message: "Need subtitles?",
 	}
-	survey.AskOne(prompt, &need, nil)
+	_ = survey.AskOne(prompt, &need, nil)
 	if need == false {
 		return
 	}
@@ -304,8 +304,8 @@ func getSubtitles(query string) (subtitlePath string) {
 		os.Exit(1)
 	}
 	// cleanup
-	c.LogOut()
-	c.Close()
+	_ = c.LogOut()
+	_ = c.Close()
 	return
 }
 
@@ -388,10 +388,10 @@ func init() {
 	subtitlesDir = filepath.Join(dataDir, "subtitles")
 
 	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
-		os.Mkdir(dataDir, 0700)
+		_ = os.Mkdir(dataDir, 0700)
 	}
 	if _, err := os.Stat(subtitlesDir); os.IsNotExist(err) {
-		os.Mkdir(subtitlesDir, 0700)
+		_ = os.Mkdir(subtitlesDir, 0700)
 	}
 
 	logrus.SetFormatter(&logrus.TextFormatter{
@@ -410,7 +410,7 @@ func init() {
 func main() {
 	name := color.HiYellowString("[torrodle v%s]", version)
 	banner :=
-`
+		`
 	_____                          ______________     
 	__  /________________________________  /__  /____ 
 	_  __/  __ \_  ___/_  ___/  __ \  __  /__  /_  _ \
@@ -423,9 +423,9 @@ func main() {
 	bold := color.New(color.Bold)
 	// Startup
 	fmt.Printf(banner, name)
-	bold.Print("    Made with ")
+	_, _ = bold.Print("    Made with ")
 	fmt.Print(heart)
-	bold.Print(" by tnychn ")
+	_, _ = bold.Print(" by tnychn ")
 	fmt.Print("(https://github.com/tnychn/torrodle)\n\n")
 	logrus.Debug(configurations)
 
@@ -460,7 +460,7 @@ func main() {
 		return
 	}
 	cat := torrodle.Category(strings.ToUpper(category))
-	options := []string{}
+	var options []string
 	// check for availibility of each category for each provider
 	for _, provider := range torrodle.AllProviders {
 		if torrodle.GetCategoryURL(cat, provider.GetCategories()) != "" {
@@ -505,19 +505,19 @@ func main() {
 	// Print source information
 	fmt.Print("\033c") // reset screen
 	boldYellow := color.New(color.Bold, color.FgBlue)
-	boldYellow.Print("Title: ")
+	_, _ = boldYellow.Print("Title: ")
 	fmt.Println(source.Title)
-	boldYellow.Print("From: ")
+	_, _ = boldYellow.Print("From: ")
 	fmt.Println(source.From)
-	boldYellow.Print("URL: ")
+	_, _ = boldYellow.Print("URL: ")
 	fmt.Println(source.URL)
-	boldYellow.Print("Seeders: ")
+	_, _ = boldYellow.Print("Seeders: ")
 	color.Green(strconv.Itoa(source.Seeders))
-	boldYellow.Print("Leechers: ")
+	_, _ = boldYellow.Print("Leechers: ")
 	color.Red(strconv.Itoa(source.Leechers))
-	boldYellow.Print("FileSize: ")
+	_, _ = boldYellow.Print("FileSize: ")
 	color.Cyan(strconv.Itoa(int(source.FileSize)))
-	boldYellow.Print("Magnet: ")
+	_, _ = boldYellow.Print("Magnet: ")
 	fmt.Println(source.Magnet)
 
 	// Player

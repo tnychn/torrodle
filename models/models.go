@@ -5,10 +5,12 @@ package models
 
 import (
 	"fmt"
-	"github.com/tnychn/torrodle/utils"
-	"github.com/sirupsen/logrus"
 	"net/url"
 	"sync"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/tnychn/torrodle/utils"
 )
 
 // ProviderInterface is an interface that exposes all the methods a `Provider` struct type has.
@@ -54,7 +56,7 @@ func (provider *Provider) GetCategories() Categories {
 
 // Query is a universal base function for querying webpages asynchronusly.
 func (provider *Provider) Query(query string, categoryURL CategoryURL, count int, perPage int, start int, extractor func(string, int, *[]Source, *sync.WaitGroup)) ([]Source, error) {
-	results := []Source{}
+	var results []Source
 	if count <= 0 {
 		return results, nil
 	}

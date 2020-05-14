@@ -82,7 +82,7 @@ func ListProviderResults(provider models.ProviderInterface, query string, count 
 // It sorts the results after collected all the sorted results from different providers.
 // Returns at most {count} results.
 func ListResults(providers []interface{}, query string, count int, category Category, sortBy SortBy) []models.Source {
-	argProviders := []models.ProviderInterface{}
+	var argProviders []models.ProviderInterface
 	for _, p := range providers {
 		switch p.(type) {
 		case string:
@@ -108,19 +108,19 @@ func ListResults(providers []interface{}, query string, count int, category Cate
 	}
 
 	// Get results from providers
-	results := []models.Source{}
+	var results []models.Source
 	for _, provider := range argProviders {
 		if showSpinner {
 			c := color.New(color.FgYellow, color.Bold)
 			s = spinner.New(spinner.CharSets[33], 100*time.Millisecond)
-			s.Color("fgBlue")
+			_ = s.Color("fgBlue")
 			s.Suffix = c.Sprint(" Waiting for ") + color.GreenString(provider.GetName()) + c.Sprint(" ...")
 			s.Start()
 		}
 
 		sources := ListProviderResults(provider, query, count, category, sortBy)
 		results = append(results, sources...)
-		if showSpinner {
+		if showSpinner && s != nil {
 			s.Stop()
 		}
 	}

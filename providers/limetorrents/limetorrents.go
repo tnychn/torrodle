@@ -2,7 +2,6 @@ package limetorrents
 
 import (
 	"fmt"
-
 	"strconv"
 	"strings"
 	"sync"
@@ -20,12 +19,12 @@ const (
 	Site = "https://www.limetorrents.info"
 )
 
-type LimeTorrentsProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &LimeTorrentsProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -37,7 +36,7 @@ func New() models.ProviderInterface {
 	return provider
 }
 
-func (provider *LimeTorrentsProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	results, err := provider.Query(query, categoryURL, count, 50, 1, extractor)
 	return results, err
 }
@@ -51,7 +50,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 		return
 	}
 
-	sources := []models.Source{}
+	var sources []models.Source
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table2")
 	table.Find(`tr[bgcolor="#F4F4F4"]`).Each(func(_ int, tr *goquery.Selection) {

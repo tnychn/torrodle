@@ -19,12 +19,12 @@ const (
 	Site = "https://torrentz2.eu"
 )
 
-type TorrentzProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &TorrentzProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -37,7 +37,7 @@ func New() models.ProviderInterface {
 	return provider
 }
 
-func (provider *TorrentzProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	results, err := provider.Query(query, categoryURL, count, 50, 0, extractor)
 	return results, err
 }
@@ -50,7 +50,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 		wg.Done()
 		return
 	}
-	sources := []models.Source{}
+	var sources []models.Source
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	div := doc.Find("div.results")
 	div.Find("dl").Each(func(i int, s *goquery.Selection) {

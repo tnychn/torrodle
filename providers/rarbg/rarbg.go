@@ -9,9 +9,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/tnychn/torrodle/models"
 	"github.com/tnychn/torrodle/request"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -27,12 +28,12 @@ var (
 	tokenFile string
 )
 
-type RarbgProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &RarbgProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -44,7 +45,7 @@ func New() models.ProviderInterface {
 
 	var cacheDir, _ = os.UserCacheDir()
 	var dir = filepath.Join(cacheDir, "torrodle")
-	os.Mkdir(dir, os.ModePerm)
+	_ = os.Mkdir(dir, os.ModePerm)
 	tokenFile = filepath.Join(dir, "rarbg_token.txt")
 	return provider
 }
@@ -60,8 +61,8 @@ type apiResponse struct {
 	} `json:"torrent_results"`
 }
 
-func (provider *RarbgProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
-	results := []models.Source{}
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+	var results []models.Source
 	if count <= 0 {
 		return results, nil
 	}
@@ -121,7 +122,9 @@ func (provider *RarbgProvider) Search(query string, count int, categoryURL model
 	}
 
 	response := apiResponse{}
-	json.Unmarshal([]byte(resp), &response)
+	if err = json.Unmarshal([]byte(resp), &response); err != nil {
+		return results, err
+	}
 	logrus.Infoln("RARBG: Extracting sources...")
 	data := response.TorrentResults
 	for _, result := range data {
@@ -155,12 +158,16 @@ func newToken() (string, error) {
 	response := struct {
 		Token string `json:"token"`
 	}{}
-	json.Unmarshal([]byte(resp), &response)
+	if err = json.Unmarshal([]byte(resp), &response); err != nil {
+		return "", err
+	}
 	token := response.Token
 	if token == "" {
 		return "", errors.New("RARBG: error getting API token")
 	}
-	ioutil.WriteFile(tokenFile, []byte(token), 0777)
+	if err = ioutil.WriteFile(tokenFile, []byte(token), 0777); err != nil {
+		return "", err
+	}
 	return token, nil
 }
 

@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/tnychn/torrodle/models"
 	"github.com/tnychn/torrodle/request"
 	"github.com/tnychn/torrodle/utils"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -32,12 +33,12 @@ var trackers = [...]string{
 	"udp://track.two:80",
 }
 
-type YifyProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &YifyProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -68,9 +69,9 @@ type apiResponse struct {
 	} `json:"data"`
 }
 
-func (provider *YifyProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	// categoryURL will be ignored since this provider only searches for movies
-	results := []models.Source{}
+	var results []models.Source
 	if count <= 0 {
 		return results, nil
 	}
@@ -94,7 +95,9 @@ func (provider *YifyProvider) Search(query string, count int, categoryURL models
 	}
 
 	response := apiResponse{}
-	json.Unmarshal([]byte(resp), &response)
+	if err = json.Unmarshal([]byte(resp), &response); err != nil {
+		return results, err
+	}
 
 	status := response.Status
 	msg := response.StatusMessage

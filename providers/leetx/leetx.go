@@ -19,12 +19,12 @@ const (
 	Site = "https://1337x.to"
 )
 
-type LeetxProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &LeetxProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -37,7 +37,7 @@ func New() models.ProviderInterface {
 	return provider
 }
 
-func (provider *LeetxProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	perPage := 40
 	if categoryURL == provider.Categories.All {
 		perPage = 20
@@ -55,7 +55,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 		return
 	}
 
-	sources := []models.Source{} // Temporary array for storing models.Source(s) but without magnet and torrent links
+	var sources []models.Source // Temporary array for storing models.Source(s) but without magnet and torrent links
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table-list.table.table-responsive.table-striped")
 	table.Find("tr").Each(func(i int, tr *goquery.Selection) {
@@ -92,7 +92,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 	group := sync.WaitGroup{}
 	for _, source := range sources {
 		group.Add(1)
-		go func() {
+		go func(source models.Source) {
 			var magnet string
 
 			_, html, err := request.Get(nil, source.URL, nil)
@@ -113,7 +113,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 			source.Magnet = magnet
 			*results = append(*results, source)
 			group.Done()
-		}()
+		}(source)
 	}
 	group.Wait()
 	wg.Done()

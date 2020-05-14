@@ -2,10 +2,11 @@ package sukebei
 
 import (
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/dustin/go-humanize"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/sirupsen/logrus"
@@ -19,12 +20,12 @@ const (
 	Site = "https://sukebei.nyaa.si"
 )
 
-type SukebeiProvider struct {
+type provider struct {
 	models.Provider
 }
 
 func New() models.ProviderInterface {
-	provider := &SukebeiProvider{}
+	provider := &provider{}
 	provider.Name = Name
 	provider.Site = Site
 	provider.Categories = models.Categories{
@@ -34,7 +35,7 @@ func New() models.ProviderInterface {
 	return provider
 }
 
-func (provider *SukebeiProvider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
+func (provider *provider) Search(query string, count int, categoryURL models.CategoryURL) ([]models.Source, error) {
 	results, err := provider.Query(query, categoryURL, count, 75, 1, extractor)
 	return results, err
 }
@@ -47,7 +48,7 @@ func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGro
 		wg.Done()
 		return
 	}
-	sources := []models.Source{}
+	var sources []models.Source
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(html))
 	table := doc.Find("table.table.table-bordered.table-hover.table-striped.torrent-list")
 	table.Find("tr.default").Each(func(i int, tr *goquery.Selection) {
