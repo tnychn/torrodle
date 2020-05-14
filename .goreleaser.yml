@@ -12,8 +12,7 @@ before:
     - go mod download
 
 builds:
-  -
-    main: ./cmd/torrodle/main.go
+  - main: ./cmd/torrodle/main.go
     binary: torrodle
     env:
       - CGO_ENABLED=0
@@ -61,5 +60,5 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - '^docs:'
+      - '^test:'
