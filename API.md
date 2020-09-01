@@ -2,7 +2,7 @@
 
 [⬅️ Back to Main](./README.md)
 
-The API reference for developers to work with **Torrodle** by using it as a library.
+The API reference for developers to work with **torrodle** by using it as a library.
 
 ## Index
 
