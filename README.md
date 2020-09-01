@@ -1,6 +1,6 @@
-<h1 align="center">Torrodle</h1>
+<h1 align="center">torrodle</h1>
 
-<p align="center"><strong><i>A mighty magnet scraper & streamer.</i></strong></p>
+<p align="center"><strong><i>A mighty all-in-one magnet scraper & streamer</i></strong></p>
 
 <p align="center"><img src="demo.gif" width=70%></p>
 
@@ -21,18 +21,12 @@
     </strong>
 </div>
 
-<div align="center">
-    <sub><strong>Made with ♥︎ by tnychn</strong></sub>
-    <br>
-    <sub><strong>MIT © 2019 Tony Chan</strong></sub>
-</div>
-
 ---
 
-**Torrodle** is a command-line program which searches and gathers magnet links of movies, tv shows, animes and porn videos from a variety of [providers](providers.md).
+**torrodle** is a command-line program which searches and gathers magnet links of movies, tv shows, animes and porn videos from a variety of [providers](providers.md).
 It then streams the torrent via HTTP (along with its subtitles) and plays it with a user preferred video player (such as *vlc* and *mpv*).
 
-> If you don't know what BitTorrent is, you shouldn't be using **Torrodle**.
+> If you don't know what BitTorrent is, you shouldn't be using **torrodle**.
 > There are some copyrighted content which might be illegal downloading them in your country.
 
 ## Table of Contents
@@ -99,10 +93,19 @@ For API usage, see [`API.md`](API.md).
 
 ## Contributing
 
-If you have any ideas on how to improve this project or you think there is a lack of feature, feel free to suggest it on a [issue](https://github.com/tnychn/torrodle/issues), or even better, open a [pull request](https://github.com/tnychn/torrodle/pulls). Any contributions will be greatly appreciated!
+If you have any ideas on how to improve this project or if you think there is a lack of features,
+feel free to open an issue, or even better, open a pull request. All contributions are welcome!
 
 ## Credit
 
 This project is inspired by [@Fabio Spampinato](https://github.com/fabiospampinato)'s [cliflix](https://github.com/fabiospampinato/cliflix).
 
-Torrent streaming technique refined from [@Sioro Neoku](https://github.com/Sioro-Neoku)'s [go-peerflix](https://github.com/Sioro-Neoku/go-peerflix).
+Torrent streaming technique adapted from [@Sioro Neoku](https://github.com/Sioro-Neoku)'s [go-peerflix](https://github.com/Sioro-Neoku/go-peerflix).
+
+---
+
+<div align="center">
+    <sub><strong>Made with ♥︎ by tnychn</strong></sub>
+    <br>
+    <sub><strong>MIT © 2019 Tony Chan</strong></sub>
+</div>
