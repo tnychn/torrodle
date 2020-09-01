@@ -2,7 +2,7 @@
 
 [⬅️ Back to Main](./README.md)
 
-A list of all supported torrent and subtitle providers of **Torrodle**.
+A list of all supported torrent and subtitle providers of **torrodle**.
 
 ## Index
 
@@ -83,7 +83,7 @@ A list of all supported torrent and subtitle providers of **Torrodle**.
 
 ### OpenSubtitles
  
- > Powered by [`oz/osdb`](https://github.com/oz/osdb).
+> Powered by [`oz/osdb`](https://github.com/oz/osdb).
 
 The only provider for providing subtitles movies and tv shows.
  
