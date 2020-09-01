@@ -2,7 +2,7 @@
 
 [⬅️ Back to Main](./README.md)
 
-The command-line usage of **Torrodle**.
+The command-line usage of **torrodle**.
 
 ## Index
 
