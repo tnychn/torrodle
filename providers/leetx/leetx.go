@@ -1,14 +1,18 @@
 package leetx
 
 import (
+	"context"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
+	"github.com/avast/retry-go"
+	"github.com/dustin/go-humanize"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
+	"net/http"
 	"strconv"
 	"strings"
 	"sync"
-
-	"github.com/PuerkitoBio/goquery"
-	"github.com/dustin/go-humanize"
-	"github.com/sirupsen/logrus"
+	"time"
 
 	"github.com/tnychn/torrodle/models"
 	"github.com/tnychn/torrodle/request"
@@ -21,6 +25,7 @@ const (
 
 type provider struct {
 	models.Provider
+	*rate.Limiter
 }
 
 func New() models.ProviderInterface {
@@ -34,6 +39,7 @@ func New() models.ProviderInterface {
 		Anime: "/category-search/%v/Anime/%d/",
 		Porn:  "/category-search/%v/XXX/%d/",
 	}
+	provider.Limiter = rate.NewLimiter(rate.Every(time.Second), 1)
 	return provider
 }
 
@@ -42,13 +48,23 @@ func (provider *provider) Search(query string, count int, categoryURL models.Cat
 	if categoryURL == provider.Categories.All {
 		perPage = 20
 	}
-	results, err := provider.Query(query, categoryURL, count, perPage, 0, extractor)
+	results, err := provider.Query(query, categoryURL, count, perPage, 0, provider.extractor)
 	return results, err
 }
 
-func extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
+func (provider *provider) extractor(surl string, page int, results *[]models.Source, wg *sync.WaitGroup) {
 	logrus.Infof("1337x: [%d] Extracting results...\n", page)
-	_, html, err := request.Get(nil, surl, nil)
+	var html string
+	err := retry.Do(func() (err error) {
+		_ = provider.Wait(context.Background())
+		_, html, err = request.Get(nil, surl, nil)
+		return
+	},
+		retry.RetryIf(func(err error) bool {
+			return err.Error() == http.StatusText(503)
+		}),
+		retry.Attempts(3),
+	)
 	if err != nil {
 		logrus.Errorln(fmt.Sprintf("1337x: [%d]", page), err)
 		wg.Done()

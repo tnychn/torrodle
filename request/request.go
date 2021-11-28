@@ -54,7 +54,7 @@ func Get(client *http.Client, url string, headers map[string]string) (*http.Clie
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return nil, "", errors.New(res.Status)
+		return nil, "", errors.New(http.StatusText(res.StatusCode))
 	}
 	content, err := ioutil.ReadAll(res.Body)
 	return client, string(content), err
