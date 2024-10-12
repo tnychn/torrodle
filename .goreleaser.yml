@@ -1,0 +1,64 @@
+project_name: torrodle
+
+env:
+  - GO11MODULE=on
+
+build:
+  main: main.go
+  binary: torrodle
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - main: ./cmd/torrodle/main.go
+    binary: torrodle
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - arm
+      - 386
+
+archive:
+  # project-v1.0.0_darwin-amd64.tar.gz
+  name_template: "{{ .ProjectName }}-v{{ .Version }}_{{ .Os }}-{{ .Arch }}"
+  replacements:
+    linux: linux
+    windows: windows
+    darwin: darwin
+  wrap_in_directory: true
+  format: tar.gz
+  format_overrides:
+    - goos: windows
+      format: zip
+  files:
+    - '*.md'
+    - '*.txt'
+
+checksum:
+  # project-v1.0.0_checksums.txt
+  name_template: "{{ .ProjectName }}-v{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+release:
+  # project v1.0.0
+  name_template: "{{ .ProjectName }} v{{ .Version }}"
+  github:
+    owner: tnychn
+    name: torrodle
+  draft: true
+  prerelease: auto
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
